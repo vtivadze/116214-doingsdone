@@ -122,7 +122,8 @@ $days_until_deadline = floor(($task_deadline_ts - $current_ts) / 86400);
 
                     <label class="checkbox">
                         <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
-                        <input id="show-complete-tasks" class="checkbox__input visually-hidden" type="checkbox" <?= $show_complete_tasks==1 ? 'checked' : ''?>>
+                        <input id="show-complete-tasks" class="checkbox__input visually-hidden" type="checkbox" <?= $show_complete_tasks == 1 ? 'checked' : ''?>>
+
                         <span class="checkbox__text">Показывать выполненные</span>
                     </label>
                 </div>
@@ -144,7 +145,7 @@ $days_until_deadline = floor(($task_deadline_ts - $current_ts) / 86400);
                             </td>
                         </tr>
                     <? endif; ?>
-
+                  
                     <tr class="tasks__item task <?=$days_until_deadline <= 0 ? 'task--important' : ''?>">
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
