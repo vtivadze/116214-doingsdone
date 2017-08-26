@@ -1,4 +1,5 @@
 <?php
+error_reporting(-1);
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
@@ -172,9 +173,11 @@ function get_days_until_deadline($date_deadline) {
                 </div>
 
                 <table class="tasks">
+                  
                     <? foreach($tasks as $t): ?>
                         <? if($t['Выполнен'] == 'Да' && $show_complete_tasks != 1) continue;?>
                         <tr class="tasks__item task <?=$t['Выполнен'] == 'Да' ? 'task--completed' : ''; ?> <?= ($t['Дата выполнения'] != 'Нет' && get_days_until_deadline($t['Дата выполнения']) <= 1) ? 'task--important' : ''; ?>">
+
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
                                     <input class="checkbox__input visually-hidden" type="checkbox">
@@ -184,6 +187,7 @@ function get_days_until_deadline($date_deadline) {
                             <td class="task__date"><?=$t['Дата выполнения']?></td>
 
                             <td class="task__controls">
+
                                 <? if($t['Выполнен'] == 'Нет'): ?>
                                     <button class="expand-control" type="button" name="button"><?=$t['Задача']?></button>
 
@@ -197,6 +201,7 @@ function get_days_until_deadline($date_deadline) {
                                         </li>
                                     </ul>
                                 <? endif; ?>
+
                             </td>
                         </tr>
                     <? endforeach; ?>
