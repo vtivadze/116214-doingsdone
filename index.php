@@ -11,7 +11,7 @@ $task_deadline_ts = strtotime("+" . $days . " day midnight"); // метка вр
 $current_ts = strtotime('now midnight'); // текущая метка времени
 
 // запишите сюда дату выполнения задачи в формате дд.мм.гггг
-$date_deadline = date("d.m.Y", $task_deadline_ts);
+$date_deadline = date('d.m.Y', $task_deadline_ts);
 
 // в эту переменную запишите кол-во дней до даты задачи
 $days_until_deadline = floor(($task_deadline_ts - $current_ts) / 86400);
@@ -40,7 +40,7 @@ $tasks = [
     ],
     [
         'Задача' => 'Встреча с другом',
-        'Дата выполнения' => '22.04.2018',
+        'Дата выполнения' => '28.08.2017',// '22.04.2018',
         'Категория' => 'Входящие',
         'Выполнен' => 'Нет'
     ],
@@ -57,6 +57,25 @@ $tasks = [
         'Выполнен' => 'Нет'
     ]
 ];
+
+function get_tasks_count($tasks, $project) {
+    if (strtolower($project) == strtolower('Все')) {
+        $count = count($tasks);
+    } else {
+        $count = 0;
+        foreach($tasks as $t)
+            if(strtolower($t['Категория']) == strtolower($project))
+                $count++;
+    }
+    return $count;
+}
+
+function get_days_until_deadline($date_deadline) {
+    $current_ts = time();
+    $task_deadline_ts = strtotime($date_deadline);
+
+    return floor(($task_deadline_ts - $current_ts) / 86400);
+}
 
 ?>
 <!DOCTYPE html>
@@ -102,12 +121,12 @@ $tasks = [
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-                        <? for($i = 0; $i < count($projects); $i++): ?>
-                            <li class="main-navigation__list-item <?= $i == 0 ? 'main-navigation__list-item--active' : '';?>">
-                                <a class="main-navigation__list-item-link" href="#"><?=$projects[$i]?></a>
-                                <span class="main-navigation__list-item-count">24</span>
-                            </li>
-                        <? endfor; ?>
+                    <? for ($i = 0; $i < count($projects); $i++): ?>
+                        <li class="main-navigation__list-item <?= $i == 0 ? 'main-navigation__list-item--active' : ''; ?>">
+                            <a class="main-navigation__list-item-link" href="#"><?=$projects[$i]?></a>
+                            <span class="main-navigation__list-item-count"><?=get_tasks_count($tasks, $projects[$i])?></span>
+                        </li>
+                    <? endfor; ?>
                     </ul>
                 </nav>
 
@@ -148,15 +167,17 @@ $tasks = [
 
                     <label class="checkbox">
                         <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
-                        <input id="show-complete-tasks" class="checkbox__input visually-hidden" type="checkbox" <?= $show_complete_tasks == 1 ? 'checked' : ''?>>
-
+                        <input id="show-complete-tasks" class="checkbox__input visually-hidden" type="checkbox" <?= $show_complete_tasks == 1 ? 'checked' : ''; ?>>
                         <span class="checkbox__text">Показывать выполненные</span>
                     </label>
                 </div>
 
                 <table class="tasks">
-                    <? foreach ($tasks as $t): ?>
-                        <tr class="tasks__item task <?= $t['Выполнен'] == 'Да' ? 'task--completed' : ''?>">
+                  
+                    <? foreach($tasks as $t): ?>
+                        <? if($t['Выполнен'] == 'Да' && $show_complete_tasks != 1) continue;?>
+                        <tr class="tasks__item task <?=$t['Выполнен'] == 'Да' ? 'task--completed' : ''; ?> <?= ($t['Дата выполнения'] != 'Нет' && get_days_until_deadline($t['Дата выполнения']) <= 1) ? 'task--important' : ''; ?>">
+
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
                                     <input class="checkbox__input visually-hidden" type="checkbox">
@@ -166,6 +187,21 @@ $tasks = [
                             <td class="task__date"><?=$t['Дата выполнения']?></td>
 
                             <td class="task__controls">
+
+                                <? if($t['Выполнен'] == 'Нет'): ?>
+                                    <button class="expand-control" type="button" name="button"><?=$t['Задача']?></button>
+
+                                    <ul class="expand-list hidden">
+                                        <li class="expand-list__item">
+                                            <a href="#">Выполнить</a>
+                                        </li>
+
+                                        <li class="expand-list__item">
+                                            <a href="#">Удалить</a>
+                                        </li>
+                                    </ul>
+                                <? endif; ?>
+
                             </td>
                         </tr>
                     <? endforeach; ?>
