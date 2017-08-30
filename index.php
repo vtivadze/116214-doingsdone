@@ -59,16 +59,16 @@ $tasks = [
     ]
 ];
 
-$content = template('index', [
+$content = render('index', [
     'show_complete_tasks' => $show_complete_tasks,
     'tasks' => $tasks,
 ]);
 
-$layout = template('layout', [
+ob_start('ob_gzhandler');
+echo render('layout', [
     'title' => 'Дела в порядке!',
     'projects' => $projects,
     'tasks' => $tasks,
     'content' => $content
 ]);
-
-echo $layout;
+ob_end_flush();

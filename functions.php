@@ -18,7 +18,7 @@ function get_days_until_deadline($date_deadline) {
     return floor(($task_deadline_ts - $current_ts) / 86400);
 }
 
-function template($template, $params = []) {
+function render($template, $params = []) {
 	$template = 'templates/'.$template.'.php';
 	
 	if(!is_file($template)) return '';

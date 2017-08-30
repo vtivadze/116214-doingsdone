@@ -46,15 +46,15 @@
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
                                     <input class="checkbox__input visually-hidden" type="checkbox">
-                                    <span class="checkbox__text"><?=$t['Задача']?></span>
+                                    <span class="checkbox__text"><?=htmlspecialchars(trim($t['Задача']))?></span>
                                 </label>
                             </td>
-                            <td class="task__date"><?=$t['Дата выполнения']?></td>
+                            <td class="task__date"><?=htmlspecialchars(trim($t['Дата выполнения']))?></td>
 
                             <td class="task__controls">
 
                                 <? if($t['Выполнен'] == 'Нет'): ?>
-                                    <button class="expand-control" type="button" name="button"><?=$t['Задача']?></button>
+                                    <button class="expand-control" type="button" name="button"><?=htmlspecialchars(trim($t['Задача']))?></button>
 
                                     <ul class="expand-list hidden">
                                         <li class="expand-list__item">
