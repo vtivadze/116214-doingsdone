@@ -79,7 +79,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 }
 
-$project = $_GET['project'] ?? '';
+$project = (int)($_GET['project'] ?? 0);
 if(!count($errors) && $project) {
     $proj_tasks = [];
     if(array_key_exists($project, $projects)) {
