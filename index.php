@@ -89,11 +89,16 @@ if(!count($errors) && $project) {
             }
         }
     } else {
+        $errors['not_exists'][] = 'project';
+    }
+}
+
+if (count($errors)) {
+    if(array_key_exists('incorrect', $errors) ||
+        array_key_exists('not_exists', $errors)) {
         http_response_code(404);
         exit;
     }
-} elseif (count($errors)) {
-    //errors
 }
 
 $content = render('index', [
