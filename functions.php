@@ -29,6 +29,3 @@ function render($template, $params = []) {
 	return ob_get_clean();
 }
 
-function validateID($id) {
-    return filter_var($id, FILTER_VALIDATE_INT);
-}

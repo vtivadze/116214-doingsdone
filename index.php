@@ -59,43 +59,16 @@ $tasks = [
     ]
 ];
 
-$required = [];
-$rules = ['project' => 'validateID'];
-$errors = [];
-
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
-    foreach($_GET as $key => $value) {
-        if (in_array($key, $required) && $value == '') {
-            $errors['required'][] = $key;
-        }
-
-        if (array_key_exists($key, $rules)) {
-            $result = call_user_func('validateID', $value);
-
-            if (!$result) {
-                $errors['incorrect'][] = $key;
-            }
-        }
-    }
-}
-
-$project = (int)($_GET['project'] ?? 0);
-if(!count($errors) && $project) {
+    $project = $_GET['project'] ?? 0;
     $proj_tasks = [];
     if(array_key_exists($project, $projects)) {
         foreach ($tasks as $key => $value) {
-            if ($value['Категория'] === $projects[$project]) {
+            if ($value['Категория'] === $projects[$project] || $project == 0) {
                 $proj_tasks[] = $tasks[$key];
             }
         }
     } else {
-        $errors['not_exists'][] = 'project';
-    }
-}
-
-if (count($errors)) {
-    if(array_key_exists('incorrect', $errors) ||
-        array_key_exists('not_exists', $errors)) {
         http_response_code(404);
         exit;
     }
@@ -103,7 +76,7 @@ if (count($errors)) {
 
 $content = render('index', [
     'show_complete_tasks' => $show_complete_tasks,
-    'tasks' => $proj_tasks ?? $tasks,
+    'tasks' => $proj_tasks,
 ]);
 
 ob_start('ob_gzhandler');
