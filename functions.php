@@ -28,3 +28,4 @@ function render($template, $params = []) {
 	include $template;
 	return ob_get_clean();
 }
+

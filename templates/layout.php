@@ -43,7 +43,7 @@
                     <ul class="main-navigation__list">
                     <? for ($i = 0; $i < count($projects); $i++): ?>
                         <li class="main-navigation__list-item <?= $i == 0 ? 'main-navigation__list-item--active' : ''; ?>">
-                            <a class="main-navigation__list-item-link" href="#"><?=htmlspecialchars(trim($projects[$i]))?></a>
+<a class="main-navigation__list-item-link" href="/116214-doingsdone/index.php?project=<?=$i;?>"><?=htmlspecialchars(trim($projects[$i]))?></a>
                             <span class="main-navigation__list-item-count"><?=get_tasks_count($tasks, $projects[$i])?></span>
                         </li>
                     <? endfor; ?>

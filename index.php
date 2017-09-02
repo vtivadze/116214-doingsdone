@@ -59,9 +59,24 @@ $tasks = [
     ]
 ];
 
+if($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $project = $_GET['project'] ?? 0;
+    $proj_tasks = [];
+    if(array_key_exists($project, $projects)) {
+        foreach ($tasks as $key => $value) {
+            if ($value['Категория'] === $projects[$project] || $project == 0) {
+                $proj_tasks[] = $tasks[$key];
+            }
+        }
+    } else {
+        http_response_code(404);
+        exit;
+    }
+}
+
 $content = render('index', [
     'show_complete_tasks' => $show_complete_tasks,
-    'tasks' => $tasks,
+    'tasks' => $proj_tasks,
 ]);
 
 ob_start('ob_gzhandler');
