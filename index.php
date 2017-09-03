@@ -121,20 +121,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         if (isset($_FILES['preview'])) {
-            $f_name = $_FILES['preview']['name'];
-            $f_type = $_FILES['preview']['type'];
-            $f_size = $_FILES['preview']['size'];
-            $f_tmp_name = $_FILES['preview']['tmp_name'];
-            $f_error = $_FILES['preview']['error'];
+            $result = call_user_func('validateFile', $_FILES['preview']);
 
-            $mime = ['text/plain', 'application/pdf', 'application/msword', 'text/csv'];
-
-            if (is_uploaded_file($f_tmp_name) &&
-                in_array($f_type, $mime) &&
-                $f_size < 2000000 &&
-                !$f_error) {
+            if ($result) {
                 move_uploaded_file($f_tmp_name, $f_name);
-            }  
+            } else {
+                $errors['preview'] = "Никорректный фаил!";
+            }
         }
 
         if (!count($errors)) {

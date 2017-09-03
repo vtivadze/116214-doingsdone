@@ -37,10 +37,13 @@
       <label class="form__label">Файл</label>
       <div class="form__input-file">
         <input class="visually-hidden" type="file" name="preview" id="preview" value="">
-        <label class="button button--transparent" for="preview">
+        <label class="button button--transparent <?=array_key_exists('preview', $errors) ? 'form__input--error' : '';?>" for="preview">
             <span>Выберите файл</span>
         </label>
       </div>
+      <? if(array_key_exists('preview', $errors)): ?>
+        <span class="form__error"><?=$errors['preview'];?></span>
+      <? endif; ?>
     </div>
 
     <div class="form__row form__row--controls">
