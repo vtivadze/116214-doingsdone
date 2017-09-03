@@ -29,3 +29,6 @@ function render($template, $params = []) {
 	return ob_get_clean();
 }
 
+function validateDate($value) {
+    return preg_match('/^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(19|20)\d\d$/', $value) && (strtotime($value) > time());
+}

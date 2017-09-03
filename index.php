@@ -60,6 +60,8 @@ $tasks = [
 ];
 
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
+
+    //main
     $project = $_GET['project'] ?? 0;
     $proj_tasks = [];
     if(array_key_exists($project, $projects)) {
@@ -72,18 +74,99 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         http_response_code(404);
         exit;
     }
+
+    //index
+    $content = render('index', [
+        'show_complete_tasks' => $show_complete_tasks,
+        'tasks' => $proj_tasks,
+    ]);
+
+    //add task
+    if (isset($_GET['add'])) {
+        $overlay = ' class="overlay"';
+        $content = render('add_task', [
+            'projects' => $projects
+        ]);
+    }
 }
 
-$content = render('index', [
-    'show_complete_tasks' => $show_complete_tasks,
-    'tasks' => $proj_tasks,
-]);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['add'])) {
+        $name = htmlspecialchars(trim($_POST['name']));
+        $project = htmlspecialchars(trim($_POST['project']));
+        $date = htmlspecialchars(trim($_POST['date']));
+        
+        $required = ['name', 'project', 'date'];
+        $rules = ['date' => 'validateDate'];
+        $errors = [];
+
+        foreach ($_POST as $key => $value) {
+            if (in_array($key, $required) && $value == '') {
+                $errors[$key] = "Заполните это поле!";
+                continue;
+            }
+
+            if (array_key_exists($key, $rules)) {
+                $result = call_user_func($rules[$key], $value);
+
+                if (!$result) {
+                    $errors[$key] = "Заполните поле корректно!";
+                }
+            }
+        }
+
+        if (isset($_FILES['preview'])) {
+            $f_name = $_FILES['preview']['name'];
+            $f_type = $_FILES['preview']['type'];
+            $f_size = $_FILES['preview']['size'];
+            $f_tmp_name = $_FILES['preview']['tmp_name'];
+            $f_error = $_FILES['preview']['error'];
+
+            $mime = ['text/plain', 'application/pdf', 'application/msword', 'text/csv'];
+
+            if (is_uploaded_file($f_tmp_name) &&
+                in_array($f_type, $mime) &&
+                $f_size < 2000000 &&
+                !$f_error) {
+                move_uploaded_file($f_tmp_name, $f_name);
+            }  
+        }
+
+        if (!count($errors)) {
+
+            array_unshift($tasks, [
+                'Задача' => $name,
+                'Дата выполнения' => $date,
+                'Категория' => $projects[$project],
+                'Выполнен' => 'Нет'
+            ]);
+
+            $content = render('index', [
+                'show_complete_tasks' => $show_complete_tasks,
+                'tasks' => $tasks,
+            ]);
+
+        } else {
+
+            $overlay = ' class="overlay"';
+            $content = render('add_task', [
+                'projects' => $projects,
+                'errors' => $errors,
+                'name' => $name,
+                'project' => $project,
+                'date' => $date
+            ]);
+
+        }
+    }
+}
 
 ob_start('ob_gzhandler');
 echo render('layout', [
     'title' => 'Дела в порядке!',
     'projects' => $projects,
     'tasks' => $tasks,
+    'overlay' => $overlay ?? '',
     'content' => $content
 ]);
 ob_end_flush();
