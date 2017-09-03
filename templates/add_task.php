@@ -7,6 +7,9 @@
     <div class="form__row">
       <label class="form__label" for="name">Название <sup>*</sup></label>
       <input class="form__input <?=array_key_exists('name', $errors) ? 'form__input--error' : '';?>" type="text" name="name" id="name" value="<?=$name ?? '';?>" placeholder="Введите название">
+      <? if(array_key_exists('name', $errors)): ?>
+        <span class="form__error"><?=$errors['name'];?></span>
+      <? endif; ?>
     </div>
 
     <div class="form__row">
@@ -17,11 +20,17 @@
           <option value="<?=$i;?>" <?=(isset($project) && $i == $project) ? 'selected' : '';?>><?=$projects[$i];?></option>
         <? endfor; ?>
       </select>
+      <? if(array_key_exists('project', $errors)): ?>
+        <span class="form__error"><?=$errors['project'];?></span>
+      <? endif; ?>
     </div>
 
     <div class="form__row">
       <label class="form__label" for="date">Дата выполнения <sup>*</sup></label>
       <input class="form__input form__input--date  <?=array_key_exists('date', $errors) ? 'form__input--error' : '';?>" type="text" name="date" id="date" value="<?=$date ?? '';?>" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
+      <? if(array_key_exists('date', $errors)): ?>
+        <span class="form__error"><?=$errors['date'];?></span>
+      <? endif; ?>
     </div>
 
     <div class="form__row">
