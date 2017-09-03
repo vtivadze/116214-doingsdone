@@ -85,7 +85,8 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['add'])) {
         $overlay = ' class="overlay"';
         $content = render('add_task', [
-            'projects' => $projects
+            'projects' => $projects,
+            'errors' => [],
         ]);
     }
 }
@@ -97,7 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $date = htmlspecialchars(trim($_POST['date']));
         
         $required = ['name', 'project', 'date'];
-        $rules = ['date' => 'validateDate'];
+        $rules = [
+            'name' => 'validateName',
+            'project' => 'validateProject',
+            'date' => 'validateDate',
+        ];
         $errors = [];
 
         foreach ($_POST as $key => $value) {

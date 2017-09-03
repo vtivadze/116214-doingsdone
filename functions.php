@@ -32,3 +32,11 @@ function render($template, $params = []) {
 function validateDate($value) {
     return preg_match('/^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(19|20)\d\d$/', $value) && (strtotime($value) > time());
 }
+
+function validateName($value) {
+    return mb_strlen($value) < 15;
+}
+
+function validateProject($value) {
+    return array_key_exists($value, $GLOBALS['projects']);
+}
