@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
 
-        if (isset($_FILES['preview'])) {
+        if (isset($_FILES['preview']) && $_FILES['preview']['error'] != 4) {
             $result = call_user_func('validateFile', $_FILES['preview']);
 
             if ($result) {
