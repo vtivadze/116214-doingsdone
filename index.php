@@ -60,6 +60,8 @@ $tasks = [
 ];
 
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
+
+    //main
     $project = $_GET['project'] ?? 0;
     $proj_tasks = [];
     if(array_key_exists($project, $projects)) {
@@ -72,18 +74,97 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         http_response_code(404);
         exit;
     }
+
+    //index
+    $content = render('index', [
+        'show_complete_tasks' => $show_complete_tasks,
+        'tasks' => $proj_tasks,
+    ]);
+
+    //add task
+    if (isset($_GET['add'])) {
+        $overlay = ' class="overlay"';
+        $content = render('add_task', [
+            'projects' => $projects,
+            'errors' => [],
+        ]);
+    }
 }
 
-$content = render('index', [
-    'show_complete_tasks' => $show_complete_tasks,
-    'tasks' => $proj_tasks,
-]);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['add'])) {
+        $name = htmlspecialchars(trim($_POST['name']));
+        $project = htmlspecialchars(trim($_POST['project']));
+        $date = htmlspecialchars(trim($_POST['date']));
+        
+        $required = ['name', 'project', 'date'];
+        $rules = [
+            'name' => 'validateName',
+            'project' => 'validateProject',
+            'date' => 'validateDate',
+        ];
+        $errors = [];
+
+        foreach ($_POST as $key => $value) {
+            if (in_array($key, $required) && $value == '') {
+                $errors[$key] = "Заполните это поле!";
+                continue;
+            }
+
+            if (array_key_exists($key, $rules)) {
+                $result = call_user_func($rules[$key], $value);
+
+                if (!$result) {
+                    $errors[$key] = "Заполните поле корректно!";
+                }
+            }
+        }
+
+        if (isset($_FILES['preview']) && $_FILES['preview']['error'] != 4) {
+            $result = call_user_func('validateFile', $_FILES['preview']);
+
+            if ($result) {
+                move_uploaded_file($f_tmp_name, $f_name);
+            } else {
+                $errors['preview'] = "Никорректный фаил!";
+            }
+        }
+
+        if (!count($errors)) {
+
+            array_unshift($tasks, [
+                'Задача' => $name,
+                'Дата выполнения' => $date,
+                'Категория' => $projects[$project],
+                'Выполнен' => 'Нет'
+            ]);
+
+            $content = render('index', [
+                'show_complete_tasks' => $show_complete_tasks,
+                'tasks' => $tasks,
+            ]);
+
+        } else {
+
+            $overlay = ' class="overlay"';
+            $content = render('add_task', [
+                'projects' => $projects,
+                'errors' => $errors,
+                'name' => $name,
+                'project' => $project,
+                'date' => $date
+            ]);
+
+        }
+    }
+}
 
 ob_start('ob_gzhandler');
 echo render('layout', [
     'title' => 'Дела в порядке!',
     'projects' => $projects,
     'tasks' => $tasks,
+    'overlay' => $overlay ?? '',
     'content' => $content
 ]);
 ob_end_flush();
