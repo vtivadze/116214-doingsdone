@@ -63,10 +63,9 @@ function validateFile($value) {
     return $result;
 }
 
-function form_errors($errors, $name, $msg) {
+function form_errors(&$errors, $name, $msg) {
     $errors[$name]['msg'] = $msg;
     $errors[$name]['class'] = 'form__input--error';
-    return $errors;
 }
 
 function get_data($data) {
@@ -74,7 +73,8 @@ function get_data($data) {
 }
 
 function add_new_task(&$tasks, $name, $date, $project, $done) {
-    array_unshift($tasks, [
+    array_unshift($tasks,
+    [
         'Задача' => $name,
         'Дата выполнения' => $date,
         'Категория' => $project,

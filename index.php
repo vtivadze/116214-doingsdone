@@ -110,13 +110,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors = [];
         foreach ($_POST as $key => $value) {
             if (in_array($key, $required) && $value == '') {
-                $errors = form_errors($errors, $key, 'Заполните это поле!');
+                form_errors($errors, $key, 'Заполните это поле!');
                 continue;
             }
 
             if (array_key_exists($key, $rules)) {
                 if (!call_user_func($rules[$key], $value))
-                    $errors = form_errors($errors, $key, 'Заполните поле корректно!');
+                    form_errors($errors, $key, 'Заполните поле корректно!');
             }
         }
 
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (call_user_func('validateFile', $_FILES['preview']))
                 move_uploaded_file($f_tmp_name, $f_name);
             else
-                $errors = form_errors($errors, 'preview', 'Никорректный фаил!');
+                form_errors($errors, 'preview', 'Никорректный фаил!');
         }
 
         if (!count($errors)) {
