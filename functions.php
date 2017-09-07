@@ -72,10 +72,6 @@ function form_errors(&$errors, $name, $msg) {
     $errors[$name]['class'] = 'form__input--error';
 }
 
-function get_data($data) {
-    return htmlspecialchars(trim($data));
-}
-
 function add_new_task(&$tasks, $name, $date, $project, $done) {
     array_unshift($tasks,
     [

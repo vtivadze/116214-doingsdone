@@ -23,12 +23,12 @@ $date_deadline = date('d.m.Y', $task_deadline_ts);
 // в эту переменную запишите кол-во дней до даты задачи
 $days_until_deadline = floor(($task_deadline_ts - $current_ts) / 86400);
 
-require_once 'proj_tasks.php';
+require_once 'data.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     //main
-    $project = (int)get_data($_GET['project'] ?? 0);
+    $project = (int)trim($_GET['project'] ?? 0);
 
     if (!isset($projects[$project])) {
         http_response_code(404);
@@ -62,9 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['add'])) {
 
-        $name = get_data($_POST['name']);
-        $project = get_data($_POST['project']);
-        $date = get_data($_POST['date']);
+        $name = trim($_POST['name']);
+        $project = trim($_POST['project']);
+        $date = trim($_POST['date']);
         
         $required = ['name', 'project', 'date'];
         $rules = 
@@ -118,8 +118,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (isset($_POST['login'])) {
 
-        $email = get_data($_POST['email']);
-        $password = get_data($_POST['password']);
+        $email = trim($_POST['email']);
+        $password = trim($_POST['password']);
 
         $required = ['email', 'password'];
         $rules = ['email' => 'validateEmail'];
@@ -142,10 +142,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             foreach ($users as $user) {
                 if ($user['email'] == $email && password_verify($password , $user['password'])) {
                     $_SESSION['email'] = $email;
-                    $_SESSION['password'] = $password;
                     $_SESSION['name'] = $user['name'];
 
-                    header("Location: /116214-doingsdone/");
+                    header("Location: /");
                     exit;
                 } else {
                     $overlay = 'overlay';
@@ -168,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $header = render('header', []);
 
-if (!isset($_SESSION['email']) || !isset($_SESSION['password'])) {
+if (!isset($_SESSION['name'])) {
     
     if (isset($_GET['login'])) {
         $overlay = 'overlay';

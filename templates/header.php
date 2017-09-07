@@ -4,10 +4,10 @@
     </a>
 
     <div class="main-header__side">
-        <? if (!isset($_SESSION['email']) || !isset($_SESSION['password'])): ?>
-            <a class="main-header__side-item button button--transparent" href="/116214-doingsdone/index.php?login">Войти</a>
+        <? if (!isset($_SESSION['name'])): ?>
+            <a class="main-header__side-item button button--transparent" href="/index.php?login">Войти</a>
         <? else: ?>
-            <a class="main-header__side-item button button--plus" href="/116214-doingsdone/index.php?add">Добавить задачу</a>
+            <a class="main-header__side-item button button--plus" href="/index.php?add">Добавить задачу</a>
 
             <div class="main-header__side-item user-menu">
                 <div class="user-menu__image">
@@ -17,7 +17,7 @@
                 <div class="user-menu__data">
                     <p><?=$_SESSION['name'];?></p>
 
-                    <a href="/116214-doingsdone/logout.php">Выйти</a>
+                    <a href="/logout.php">Выйти</a>
                 </div>
             </div>
         <? endif; ?>

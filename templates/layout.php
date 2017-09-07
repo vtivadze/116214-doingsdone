@@ -24,7 +24,7 @@
                     <ul class="main-navigation__list">
                     <? for ($i = 0; $i < count($projects); $i++): ?>
                         <li class="main-navigation__list-item <?= $i == 0 ? 'main-navigation__list-item--active' : ''; ?>">
-                            <a class="main-navigation__list-item-link" href="/116214-doingsdone/index.php?project=<?=$i;?>"><?=htmlspecialchars(trim($projects[$i]))?></a>
+                            <a class="main-navigation__list-item-link" href="/index.php?project=<?=$i;?>"><?=htmlspecialchars(trim($projects[$i]))?></a>
                             <span class="main-navigation__list-item-count"><?=get_tasks_count($tasks, $projects[$i])?></span>
                         </li>
                     <? endfor; ?>
@@ -47,7 +47,7 @@
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
 
-        <a class="main-footer__button button button--plus" href="/116214-doingsdone/index.php?add">Добавить задачу</a>
+        <a class="main-footer__button button button--plus" href="/index.php?add">Добавить задачу</a>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>
