@@ -63,6 +63,17 @@ function validateFile($value) {
     return $result;
 }
 
+function validateEmail($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
+function validatePassword($password) {
+    if (mb_strlen($password) < 8 || mb_strlen($password) > 20)
+        return false;
+    else
+        return true;
+}
+
 function form_errors(&$errors, $name, $msg) {
     $errors[$name]['msg'] = $msg;
     $errors[$name]['class'] = 'form__input--error';
