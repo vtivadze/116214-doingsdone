@@ -122,11 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $password = get_data($_POST['password']);
 
         $required = ['email', 'password'];
-        $rules = 
-        [
-            'email' => 'validateEmail',
-            'password' => 'validatePassword'
-        ];
+        $rules = ['email' => 'validateEmail'];
 
         $errors = [];
         foreach ($_POST as $key => $value) {
