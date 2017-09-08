@@ -8,32 +8,13 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body<?=$overlay?>><!--class="overlay"-->
+<body class="<?=$overlay?>"><!--class="overlay"-->
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
     <div class="container container--with-sidebar">
-        <header class="main-header">
-            <a href="#">
-                <img src="img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
-            </a>
-
-            <div class="main-header__side">
-                <a class="main-header__side-item button button--plus" href="/116214-doingsdone/index.php?add">Добавить задачу</a>
-
-                <div class="main-header__side-item user-menu">
-                    <div class="user-menu__image">
-                        <img src="img/user-pic.jpg" width="40" height="40" alt="Пользователь">
-                    </div>
-
-                    <div class="user-menu__data">
-                        <p>Константин</p>
-
-                        <a href="#">Выйти</a>
-                    </div>
-                </div>
-            </div>
-        </header>
+        
+        <?=$header;?>
 
         <div class="content">
             <section class="content__side">
@@ -43,7 +24,7 @@
                     <ul class="main-navigation__list">
                     <? for ($i = 0; $i < count($projects); $i++): ?>
                         <li class="main-navigation__list-item <?= $i == 0 ? 'main-navigation__list-item--active' : ''; ?>">
-                            <a class="main-navigation__list-item-link" href="/116214-doingsdone/index.php?project=<?=$i;?>"><?=htmlspecialchars(trim($projects[$i]))?></a>
+                            <a class="main-navigation__list-item-link" href="/index.php?project=<?=$i;?>"><?=htmlspecialchars(trim($projects[$i]))?></a>
                             <span class="main-navigation__list-item-count"><?=get_tasks_count($tasks, $projects[$i])?></span>
                         </li>
                     <? endfor; ?>
@@ -53,7 +34,7 @@
                 <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
             </section>
 
-            <?=$content?>
+            <?=$content;?>
         </div>
     </div>
 </div>
@@ -66,7 +47,7 @@
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
 
-        <a class="main-footer__button button button--plus" href="/116214-doingsdone/index.php?add">Добавить задачу</a>
+        <a class="main-footer__button button button--plus" href="/index.php?add">Добавить задачу</a>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>

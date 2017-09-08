@@ -16,5 +16,10 @@ $users = [
         'email' => 'warrior07@mail.ru',
         'name' => 'Руслан',
         'password' => '$2y$10$2OxpEH7narYpkOT1H5cApezuzh10tZEEQ2axgFOaKW.55LxIJBgWW'
+    ],
+    [
+        'email' => 'vaxotivadze@gmail.com',
+        'name' => 'Вахтанг',
+        'password' => '$2y$10$1xDJ5h.LL9Qd4t/qtCR/d.j4wepIH3sPMtetgAUBDt1ucyc3SQJ0y'
     ]
 ];

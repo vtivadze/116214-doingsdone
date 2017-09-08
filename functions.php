@@ -53,11 +53,39 @@ function validateFile($value) {
     if (is_uploaded_file($f_tmp_name) &&
         in_array($f_type, $mime) &&
         $f_size < 2000000 &&
-        !$f_error) {
+        !$f_error)
+    {
         $result = true;
     } else {
         $result = false;
     }
 
     return $result;
+}
+
+function validateEmail($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
+function form_errors(&$errors, $name, $msg) {
+    $errors[$name]['msg'] = $msg;
+    $errors[$name]['class'] = 'form__input--error';
+}
+
+function add_new_task(&$tasks, $name, $date, $project, $done) {
+    array_unshift($tasks,
+    [
+        'Задача' => $name,
+        'Дата выполнения' => $date,
+        'Категория' => $project,
+        'Выполнен' => $done
+    ]);
+}
+
+function get_proj_tasks($projects, $project, $tasks) {
+    foreach ($tasks as $key => $value) {
+        if ($value['Категория'] === $projects[$project] || $project == 0)
+            $proj_tasks[] = $tasks[$key];
+    }
+    return $proj_tasks ?? [];
 }
