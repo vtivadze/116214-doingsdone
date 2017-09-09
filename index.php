@@ -2,13 +2,14 @@
 session_start();
 // unset($_SESSION['email']);
 // unset($_SESSION['password']);
-
+//  setcookie('show_completed', '', time() -100000000000);
+// exit;
 error_reporting(-1);
 require_once 'functions.php';
 require_once 'userdata.php';
 
 // показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
+$show_complete_tasks = $_COOKIE['show_completed'] ?? 0;
 
 // устанавливаем часовой пояс в Московское время
 date_default_timezone_set('Europe/Moscow');
@@ -26,6 +27,13 @@ $days_until_deadline = floor(($task_deadline_ts - $current_ts) / 86400);
 require_once 'data.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+
+    //cookie
+    if (isset($_GET['show_completed'])) {
+        setcookie('show_completed', $_GET['show_completed']);
+        header("Location: /");
+        exit;
+    }
 
     //main
     $project = (int)trim($_GET['project'] ?? 0);
