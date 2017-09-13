@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Sep 14, 2017 at 12:28 AM
+-- Generation Time: Sep 14, 2017 at 02:40 AM
 -- Server version: 5.7.19
 -- PHP Version: 7.1.7
 
@@ -29,8 +29,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `projects` (
-  `proj_id` int(11) UNSIGNED NOT NULL,
-  `proj_name` varchar(32) NOT NULL
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -40,10 +40,10 @@ CREATE TABLE `projects` (
 --
 
 CREATE TABLE `tasks` (
-  `task_id` int(11) UNSIGNED NOT NULL,
+  `id` int(11) UNSIGNED NOT NULL,
   `date_createion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_completion` timestamp NOT NULL,
-  `task_name` varchar(50) NOT NULL,
+  `name` varchar(50) NOT NULL,
   `file` varchar(100) NOT NULL,
   `deadline` timestamp NOT NULL,
   `user_id` int(11) UNSIGNED NOT NULL,
@@ -57,14 +57,12 @@ CREATE TABLE `tasks` (
 --
 
 CREATE TABLE `users` (
-  `user_id` int(11) UNSIGNED NOT NULL,
+  `id` int(11) UNSIGNED NOT NULL,
   `date_registration` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `email` varchar(50) NOT NULL,
   `name` varchar(32) NOT NULL,
   `password` char(60) NOT NULL,
-  `contacts` varchar(100) NOT NULL,
-  `proj_id` int(11) UNSIGNED NOT NULL,
-  `task_id` int(11) UNSIGNED NOT NULL
+  `contacts` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -75,14 +73,14 @@ CREATE TABLE `users` (
 -- Indexes for table `projects`
 --
 ALTER TABLE `projects`
-  ADD PRIMARY KEY (`proj_id`),
-  ADD UNIQUE KEY `proj_name` (`proj_name`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `proj_name` (`name`);
 
 --
 -- Indexes for table `tasks`
 --
 ALTER TABLE `tasks`
-  ADD PRIMARY KEY (`task_id`),
+  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `file` (`file`),
   ADD KEY `proj_id` (`proj_id`),
   ADD KEY `user_id` (`user_id`);
@@ -91,9 +89,9 @@ ALTER TABLE `tasks`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`),
-  ADD KEY `proj_id` (`proj_id`),
-  ADD KEY `task_id` (`task_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `email_password` (`email`,`password`) USING BTREE;
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -103,17 +101,17 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `proj_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `task_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Constraints for dumped tables
 --
@@ -122,14 +120,8 @@ ALTER TABLE `users`
 -- Constraints for table `tasks`
 --
 ALTER TABLE `tasks`
-  ADD CONSTRAINT `tasks_proj` FOREIGN KEY (`proj_id`) REFERENCES `projects` (`proj_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `tasks_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `users`
---
-ALTER TABLE `users`
-  ADD CONSTRAINT `users_proj` FOREIGN KEY (`proj_id`) REFERENCES `projects` (`proj_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `tasks_proj` FOREIGN KEY (`proj_id`) REFERENCES `projects` (`id`) ON DELETE NO ACTION,
+  ADD CONSTRAINT `tasks_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
