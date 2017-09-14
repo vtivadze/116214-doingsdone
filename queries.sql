@@ -9,22 +9,22 @@ INSERT INTO `users` (`email`, `name`, `password`) VALUES
 
 
 INSERT INTO `tasks` (`date_creation`, `name`, `deadline`, `proj_id`) VALUES
-	('25.05.2018', 'Собеседование в IT компании', '01.06.2018', 3);
+	('2018-05-25', 'Собеседование в IT компании', '2018-06-01', 3);
 
 INSERT INTO `tasks` (`date_creation`, `name`, `deadline`, `proj_id`) VALUES
-	('24.05.2018', 'Выполнить тестовое задание', '25.05.2018', 3);
+	('2018-05-24', 'Выполнить тестовое задание', '2018-05-02', 3);
 
 INSERT INTO `tasks` (`date_creation`, `date_completion`, `name`, `deadline`, `proj_id`) VALUES
-	('15.04.2018', '20.04.2018' , 'Сделать задание первого раздела', '21.04.2018', 2);	
+	('2018-04-15', '20.04.2018' , 'Сделать задание первого раздела', '2018-04-21', 2);	
 
 INSERT INTO `tasks` (`date_creation`, `name`, `deadline`, `proj_id`) VALUES
-	('20.04.2018','Встреча с другом', '22.04.2018', 1);
+	('2018-04-20','Встреча с другом', '2018-04-22', 1);
 
 INSERT INTO `tasks` (`date_creation`, `name`, `proj_id`) VALUES
-	('18.03.2018', 'Купить корм для кота', 4);
+	('2018-03-18', 'Купить корм для кота', 4);
 
 INSERT INTO `tasks` (`date_creation`, `name`,`proj_id`) VALUES
-	('10.02.2018', 'Заказать пиццу', 1);
+	('2018-02-10', 'Заказать пиццу', 1);
 
 
 
