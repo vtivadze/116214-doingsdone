@@ -40,11 +40,11 @@ WHERE
 -- list of all tasks from some project
 SELECT * FROM `tasks` WHERE `proj_id` = 'proj_id';
 
-set a task as completed
+-- t a task as completed
 UPDATE `tasks` SET date_completion = CURRENT_TIMESTAMP() WHERE `id` = 'id';
 
 -- list of all tasks for tomorrow
 SELECT * FROM `tasks` WHERE `deadline` = CURDATE() + INTERVAL 1 DAY;
 
-update task's name by task's id
+-- update task's name by task's id
 UPDATE `tasks` SET `name` = 'new name' WHERE `id` = 'id';
