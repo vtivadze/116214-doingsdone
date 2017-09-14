@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Sep 14, 2017 at 12:49 PM
+-- Generation Time: Sep 14, 2017 at 07:45 PM
 -- Server version: 5.7.19
 -- PHP Version: 7.1.7
 
@@ -41,11 +41,11 @@ CREATE TABLE `projects` (
 
 CREATE TABLE `tasks` (
   `id` int(11) UNSIGNED NOT NULL,
-  `date_createion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `date_completion` timestamp NOT NULL,
+  `date_creation` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_completion` timestamp NULL DEFAULT NULL,
   `name` varchar(50) NOT NULL,
-  `file` varchar(100) NOT NULL,
-  `deadline` timestamp NOT NULL,
+  `file` varchar(100) DEFAULT NULL,
+  `deadline` timestamp NULL DEFAULT NULL,
   `user_id` int(11) UNSIGNED NOT NULL,
   `proj_id` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -62,7 +62,7 @@ CREATE TABLE `users` (
   `email` varchar(50) NOT NULL,
   `name` varchar(32) NOT NULL,
   `password` char(60) NOT NULL,
-  `contacts` varchar(100) NOT NULL
+  `contacts` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
