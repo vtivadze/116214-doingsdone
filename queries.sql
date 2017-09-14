@@ -28,7 +28,7 @@ INSERT INTO `tasks` (`date_creation`, `name`, `user_id`, `proj_id`) VALUES
 
 
 
-list of all projects of a user
+-- list of all projects of a user
 SELECT 
 	p.`name` 
 FROM 
@@ -37,13 +37,13 @@ FROM
 WHERE
 	t.`user_id` = 'user_id';
 
-list of all tasks from some project
+-- list of all tasks from some project
 SELECT * FROM `tasks` WHERE `proj_id` = 'proj_id';
 
 set a task as completed
 UPDATE `tasks` SET date_completion = CURRENT_TIMESTAMP() WHERE `id` = 'id';
 
-list of all tasks for tomorrow
+-- list of all tasks for tomorrow
 SELECT * FROM `tasks` WHERE `deadline` = CURDATE() + INTERVAL 1 DAY;
 
 update task's name by task's id
