@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Sep 14, 2017 at 02:40 AM
+-- Generation Time: Sep 14, 2017 at 12:46 PM
 -- Server version: 5.7.19
 -- PHP Version: 7.1.7
 
@@ -25,34 +25,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `projects`
---
-
-CREATE TABLE `projects` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tasks`
---
-
-CREATE TABLE `tasks` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `date_createion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `date_completion` timestamp NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `file` varchar(100) NOT NULL,
-  `deadline` timestamp NOT NULL,
-  `user_id` int(11) UNSIGNED NOT NULL,
-  `proj_id` int(11) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `users`
 --
 
@@ -70,59 +42,21 @@ CREATE TABLE `users` (
 --
 
 --
--- Indexes for table `projects`
---
-ALTER TABLE `projects`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `proj_name` (`name`);
-
---
--- Indexes for table `tasks`
---
-ALTER TABLE `tasks`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `file` (`file`),
-  ADD KEY `proj_id` (`proj_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `email_password` (`email`,`password`) USING BTREE;
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `projects`
---
-ALTER TABLE `projects`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `tasks`
---
-ALTER TABLE `tasks`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `tasks`
---
-ALTER TABLE `tasks`
-  ADD CONSTRAINT `tasks_proj` FOREIGN KEY (`proj_id`) REFERENCES `projects` (`id`) ON DELETE NO ACTION,
-  ADD CONSTRAINT `tasks_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION;
-COMMIT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
