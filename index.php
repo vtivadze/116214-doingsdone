@@ -1,12 +1,11 @@
 <?php
 session_start();
-// unset($_SESSION['email']);
-// unset($_SESSION['password']);
-//  setcookie('show_completed', '', time() -100000000000);
-// exit;
+
 error_reporting(-1);
 require_once 'functions.php';
+require_once 'mysql_helper.php';
 require_once 'userdata.php';
+require_once 'init.php';
 
 // показывать или нет выполненные задачи
 $show_complete_tasks = $_COOKIE['show_completed'] ?? 0;
@@ -26,7 +25,7 @@ $days_until_deadline = floor(($task_deadline_ts - $current_ts) / 86400);
 
 require_once 'data.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
 
     //cookie
     if (isset($_GET['show_completed'])) {
@@ -67,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
     if (isset($_POST['add'])) {
 
         $name = trim($_POST['name']);
@@ -175,12 +174,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $header = render('header', []);
 
+if (isset($error)) {
+    $err_cont = render('error', ['error' => $error]);
+    $overlay = '';
+    $hidden = 'hidden';
+}
+
 if (!isset($_SESSION['name'])) {
     
-    if (isset($_GET['login'])) {
+    if (isset($_GET['login']) && !isset($error)) {
         $overlay = 'overlay';
         $hidden = '';
     }
+
+    $content = render('guest_cont', []);
 
     $main = render('guest',
     [
@@ -189,7 +196,8 @@ if (!isset($_SESSION['name'])) {
         'email' => $email ?? '',
         'password' => $password ?? '',
         'errors' => $errors ?? [],
-        'header' => $header
+        'header' => $header,
+        'content' => $err_cont ?? $content
     ]);
 
 } else {
@@ -201,7 +209,7 @@ if (!isset($_SESSION['name'])) {
         'tasks' => $tasks,
         'overlay' => $overlay ?? '',
         'header' => $header,
-        'content' => $content
+        'content' => $err_cont ?? $content
     ]);
 }
 
