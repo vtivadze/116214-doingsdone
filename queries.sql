@@ -1,11 +1,12 @@
-INSERT INTO `projects` (`name`, `user_id`) VALUES 
-	('Входящие', 1), ('Учеба', 2), ('Работа', 3), ('Домашние дела', 4), ('Авто', 1);
-
 INSERT INTO `users` (`email`, `name`, `password`) VALUES 
 	('ignat.v@gmail.com', 'Игнат', '$2y$10$OqvsKHQwr0Wk6FMZDoHo1uHoXd4UdxJG/5UDtUiie00XaxMHrW8ka'),
 	('kitty_93@li.ru', 'Леночка', '$2y$10$bWtSjUhwgggtxrnJ7rxmIe63ABubHQs0AS0hgnOo41IEdMHkYoSVa'),
 	('warrior07@mail.ru', 'Руслан', '$2y$10$2OxpEH7narYpkOT1H5cApezuzh10tZEEQ2axgFOaKW.55LxIJBgWW'),
 	('vaxotivadze@gmail.com', 'Вахтанг', '$2y$10$1xDJ5h.LL9Qd4t/qtCR/d.j4wepIH3sPMtetgAUBDt1ucyc3SQJ0y');
+
+
+INSERT INTO `projects` (`name`, `user_id`) VALUES 
+	('Входящие', 1), ('Учеба', 2), ('Работа', 3), ('Домашние дела', 4), ('Авто', 1);
 
 
 INSERT INTO `tasks` (`date_creation`, `name`, `deadline`, `proj_id`) VALUES
