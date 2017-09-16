@@ -1,4 +1,6 @@
 <?php
+require_once "mysql_helper.php";
+
 function get_tasks_count($tasks, $project) {
     if (strtolower($project) == strtolower('Все')) {
         $count = count($tasks);
@@ -89,3 +91,42 @@ function get_proj_tasks($projects, $project, $tasks) {
     }
     return $proj_tasks ?? [];
 }
+
+function select_data($link, $sql, $data = []) {
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+    if (mysqli_stmt_execute($stmt)) {
+        $result = $stmt->get_result();
+        return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+    else {
+        return [];
+    }
+}
+
+function insert_data($link, $table, $data) {
+    $keys = array_keys($data);
+    $cols = implode(', ', $keys);
+    $values = array_values($data);
+    $vals = str_repeat('?, ', count($values));
+    $vals = substr($vals, 0, -2);
+
+    $sql = "INSERT INTO $table ($cols) VALUES ($vals)";
+
+    $stmt = db_get_prepare_stmt($link, $sql, $values);
+    if (mysqli_stmt_execute($stmt)) {
+        return mysqli_insert_id($link);
+    }
+    else {
+        return false;
+    }
+}
+
+function arbitrary_query($link, $sql, $data = []) {
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+    return mysqli_stmt_execute($stmt);
+}
+
+//mysqli_error
+//mysqli_insert_id
+//mysqli_real_escape_string
+//mysqli_stmt_execute

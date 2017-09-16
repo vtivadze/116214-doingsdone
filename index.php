@@ -7,6 +7,13 @@ require_once 'mysql_helper.php';
 require_once 'userdata.php';
 require_once 'init.php';
 
+//$res = select_data($link, 'SELECT * FROM users WHERE id = ?', [2]);
+//$res = insert_data($link, 'projects', ['name' => 'project', 'user_id' => 4]);
+//$res = arbitrary_query($link, "UPDATE projects SET name = ? WHERE name = ?", ['New Project', 'project']);
+//$res = arbitrary_query($link, "DELETE FROM projects WHERE name = ?", ['New Project']);
+//var_dump($res); exit;
+
+
 // показывать или нет выполненные задачи
 $show_complete_tasks = $_COOKIE['show_completed'] ?? 0;
 
@@ -25,7 +32,7 @@ $days_until_deadline = floor(($task_deadline_ts - $current_ts) / 86400);
 
 require_once 'data.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && $link) {
 
     //cookie
     if (isset($_GET['show_completed'])) {
@@ -66,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
 
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && $link) {
     if (isset($_POST['add'])) {
 
         $name = trim($_POST['name']);
