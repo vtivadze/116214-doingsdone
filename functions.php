@@ -1,17 +1,17 @@
 <?php
 require_once "mysql_helper.php";
 
-function get_tasks_count($tasks, $project) {
-    if (strtolower($project) == strtolower('Все')) {
-        $count = count($tasks);
-    } else {
-        $count = 0;
-        foreach($tasks as $t)
-            if(strtolower($t['Категория']) == strtolower($project))
-                $count++;
-    }
-    return $count;
-}
+// function get_tasks_count($tasks, $project) {
+//     if (strtolower($project) == strtolower('Все')) {
+//         $count = count($tasks);
+//     } else {
+//         $count = 0;
+//         foreach($tasks as $t)
+//             if(strtolower($t['Категория']) == strtolower($project))
+//                 $count++;
+//     }
+//     return $count;
+// }
 
 function get_days_until_deadline($date_deadline) {
     $current_ts = time();
@@ -39,9 +39,9 @@ function validateName($value) {
     return mb_strlen($value) < 15;
 }
 
-function validateProject($value) {
-    return array_key_exists($value, $GLOBALS['projects']);
-}
+// function validateProject($value) {
+//     return array_key_exists($value, $GLOBALS['projects']);
+// }
 
 function validateFile($value) {
     $f_name = $value['name'];
@@ -74,26 +74,26 @@ function form_errors(&$errors, $name, $msg) {
     $errors[$name]['class'] = 'form__input--error';
 }
 
-function add_new_task(&$tasks, $name, $date, $project, $done) {
-    array_unshift($tasks,
-    [
-        'Задача' => $name,
-        'Дата выполнения' => $date,
-        'Категория' => $project,
-        'Выполнен' => $done
-    ]);
-}
+// function add_new_task(&$tasks, $name, $date, $project, $done) {
+//     array_unshift($tasks,
+//     [
+//         'Задача' => $name,
+//         'Дата выполнения' => $date,
+//         'Категория' => $project,
+//         'Выполнен' => $done
+//     ]);
+// }
 
-function get_proj_tasks($projects, $project, $tasks) {
-    foreach ($tasks as $key => $value) {
-        if ($value['Категория'] === $projects[$project] || $project == 0)
-            $proj_tasks[] = $tasks[$key];
-    }
-    return $proj_tasks ?? [];
-}
+// function get_proj_tasks($projects, $project, $tasks) {
+//     foreach ($tasks as $key => $value) {
+//         if ($value['Категория'] === $projects[$project] || $project == 0)
+//             $proj_tasks[] = $tasks[$key];
+//     }
+//     return $proj_tasks ?? [];
+// }
 
-function select_data($link, $sql, $data = []) {
-    $stmt = db_get_prepare_stmt($link, $sql, $data);
+function select_data($con, $sql, $data = []) {
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
     if (mysqli_stmt_execute($stmt)) {
         $result = $stmt->get_result();
         return mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -103,7 +103,7 @@ function select_data($link, $sql, $data = []) {
     }
 }
 
-function insert_data($link, $table, $data) {
+function insert_data($con, $table, $data) {
     $keys = array_keys($data);
     $cols = implode(', ', $keys);
     $values = array_values($data);
@@ -112,17 +112,17 @@ function insert_data($link, $table, $data) {
 
     $sql = "INSERT INTO $table ($cols) VALUES ($vals)";
 
-    $stmt = db_get_prepare_stmt($link, $sql, $values);
+    $stmt = db_get_prepare_stmt($con, $sql, $values);
     if (mysqli_stmt_execute($stmt)) {
-        return mysqli_insert_id($link);
+        return mysqli_insert_id($con);
     }
     else {
         return false;
     }
 }
 
-function arbitrary_query($link, $sql, $data = []) {
-    $stmt = db_get_prepare_stmt($link, $sql, $data);
+function arbitrary_query($con, $sql, $data = []) {
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
     return mysqli_stmt_execute($stmt);
 }
 

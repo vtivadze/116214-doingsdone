@@ -1,18 +1,11 @@
 <?php
 session_start();
-
 error_reporting(-1);
+//echo password_hash('vaxovaxo', PASSWORD_DEFAULT); exit;
 require_once 'functions.php';
 require_once 'mysql_helper.php';
-require_once 'userdata.php';
+//require_once 'userdata.php';
 require_once 'init.php';
-
-//$res = select_data($link, 'SELECT * FROM users WHERE id = ?', [2]);
-//$res = insert_data($link, 'projects', ['name' => 'project', 'user_id' => 4]);
-//$res = arbitrary_query($link, "UPDATE projects SET name = ? WHERE name = ?", ['New Project', 'project']);
-//$res = arbitrary_query($link, "DELETE FROM projects WHERE name = ?", ['New Project']);
-//var_dump($res); exit;
-
 
 // показывать или нет выполненные задачи
 $show_complete_tasks = $_COOKIE['show_completed'] ?? 0;
@@ -30,9 +23,10 @@ $date_deadline = date('d.m.Y', $task_deadline_ts);
 // в эту переменную запишите кол-во дней до даты задачи
 $days_until_deadline = floor(($task_deadline_ts - $current_ts) / 86400);
 
-require_once 'data.php';
+$projects = select_data($con, 'SELECT projects.*, count(tasks.proj_id) AS `count` FROM projects LEFT JOIN tasks ON projects.id = tasks.proj_id GROUP BY projects.id', []);
+$tasks = select_data($con, 'SELECT * FROM tasks', []);
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && $link) {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
 
     //cookie
     if (isset($_GET['show_completed'])) {
@@ -44,13 +38,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $link) {
     //main
     $project = (int)trim($_GET['project'] ?? 0);
 
-    if (!isset($projects[$project])) {
+    if ($project != 0 && !select_data($con, 'SELECT id FROM projects WHERE id = ?', [$project])) {
         http_response_code(404);
         exit;
-    } else 
-        $proj_tasks = get_proj_tasks($projects, $project, $tasks);
+    } else {
+        if ($project != 0) {
+            $proj_tasks = select_data($con, 'SELECT * FROM tasks WHERE proj_id = ?', [$project]);
+        }
+        else {
+             $proj_tasks = select_data($con, 'SELECT * FROM tasks', []);
+        }
+    }
         
-
     //index
     $content = render('index', 
     [
@@ -73,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $link) {
 
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && $link) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
     if (isset($_POST['add'])) {
 
         $name = trim($_POST['name']);
@@ -109,7 +108,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $link) {
         }
 
         if (!count($errors)) {
-            add_new_task($tasks, $name, $date, $projects[$project], 'Нет');
+            insert_data($con, 'tasks', [
+                'name' => $name,
+                'file' => $f_name ?? '',
+                'deadline' => $date ?? null,
+                'proj_id' => $project
+            ]);
+
             $content = render('index', 
             [
                 'show_complete_tasks' => $show_complete_tasks,
@@ -153,20 +158,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $link) {
 
         if (!count($errors)) {
             
-            foreach ($users as $user) {
-                if ($user['email'] == $email && password_verify($password , $user['password'])) {
-                    $_SESSION['email'] = $email;
-                    $_SESSION['name'] = $user['name'];
+            $user_dt = select_data($con, 'SELECT name, password FROM users WHERE email = ?', [$email]);
+            
+            if ($user_dt && password_verify($password, $user_dt[0]['password'])) {
+                $_SESSION['email'] = $email;
+                $_SESSION['name'] = $user_dt[0]['name'];
 
-                    header("Location: /");
-                    exit;
-                } else {
-                    $overlay = 'overlay';
-                    $hidden = '';
-                    $errors['password']['msg'] = "Вы ввели неверный пароль!";
-                    $errors['password']['class'] = "form__input--error";
+                header("Location: /");
+                exit;
+            } else {
+                $overlay = 'overlay';
+                $hidden = '';
+                $errors['password']['msg'] = "Вы ввели неверный пароль!";
+                $errors['password']['class'] = "form__input--error";
 
-                }
             }
 
         } else {

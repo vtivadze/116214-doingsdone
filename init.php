@@ -1,8 +1,8 @@
 <?php
 
-$link = @mysqli_connect('localhost', 'root', '', 'doingsdone');
+$con = @mysqli_connect('localhost', 'root', '', 'doingsdone');
 
-if (!$link) {
+if (!$con) {
 	$error = mysqli_connect_error();
 } else {
 
