@@ -2,7 +2,6 @@
 session_start();
 error_reporting(-1);
 
-//echo password_hash('vaxovaxo', PASSWORD_DEFAULT); exit;
 require_once 'mysql_helper.php';
 require_once 'init.php';
 require_once 'functions.php';
