@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
         $name = trim($_POST['name']);
         $project = trim($_POST['project']);
         $date = trim($_POST['date']);
-        
+
         $required = ['name', 'project', 'date'];
         $rules = 
         [
@@ -114,12 +114,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
         }
 
         if (!count($errors)) {
-            insert_data($con, 'tasks', [
+            $res = insert_data($con, 'tasks', [
                 'name' => $name,
-                'file' => $f_name ?? '',
-                'deadline' => $date ?? null,
-                'proj_id' => $project
+                'file' => $f_name ?? null,
+                'deadline' => $date ? form_date($date) : null,
+                'proj_id' => (int)$project
             ]);
+
+            header("Location: /");
+            exit;
 
             $content = render('index', 
             [

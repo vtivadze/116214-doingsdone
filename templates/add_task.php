@@ -14,9 +14,9 @@
       <label class="form__label" for="project">Проект <sup>*</sup></label>
       <select class="form__input form__input--select  <?=$errors['project']['class'] ?? '';?>" name="project" id="project">
         <option value=""></option>
-        <? for ($i = 1; $i < count($projects); $i++): ?>
-          <option value="<?=$i;?>" <?=$i==$project ? 'selected' : '';?>><?=$projects[$i];?></option>
-        <? endfor; ?>
+        <? foreach ($projects as $p): ?>
+          <option value="<?=$p['id'];?>" <?=$p['id']==$project ? 'selected' : '';?>><?=$p['name'];?></option>
+        <? endforeach; ?>
       </select>
       <span class="form__error"><?=$errors['project']['msg'] ?? '';?></span>
     </div>

@@ -20,7 +20,7 @@ function render($template, $params = []) {
 }
 
 function validateDate($value) {
-    return preg_match('/^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(19|20)\d\d$/', $value) && (strtotime($value) > time());
+    return preg_match('/^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(19|20)\d\d$/', $value);
 }
 
 function validateName($value) {
@@ -28,7 +28,7 @@ function validateName($value) {
 }
 
 function validateProject($value) {
-    return select_data($GLOBALS('con'), 'SELECT id FROM projects WHERE id = ?', [$value]);
+    return select_data($GLOBALS['con'], 'SELECT id FROM projects WHERE id = ?', [$value]);
 }
 
 function validateFile($value) {
@@ -92,8 +92,10 @@ function insert_data($con, $table, $data) {
     $vals = substr($vals, 0, -2);
 
     $sql = "INSERT INTO $table ($cols) VALUES ($vals)";
-
+echo $sql . "<br>";
+var_dump($data); exit;
     $stmt = db_get_prepare_stmt($con, $sql, $values);
+
     if (mysqli_stmt_execute($stmt)) {
         return mysqli_insert_id($con);
     }
@@ -105,4 +107,9 @@ function insert_data($con, $table, $data) {
 function arbitrary_query($con, $sql, $data = []) {
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     return mysqli_stmt_execute($stmt);
+}
+
+function form_date($date) {
+    $dt = explode('.', $date);
+    return $dt[2] . '-' . $dt[1] . '-' . $dt[0];
 }
