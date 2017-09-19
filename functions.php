@@ -92,8 +92,6 @@ function insert_data($con, $table, $data) {
     $vals = substr($vals, 0, -2);
 
     $sql = "INSERT INTO $table ($cols) VALUES ($vals)";
-echo $sql . "<br>";
-var_dump($data); exit;
     $stmt = db_get_prepare_stmt($con, $sql, $values);
 
     if (mysqli_stmt_execute($stmt)) {

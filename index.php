@@ -107,8 +107,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
         }
 
         if (isset($_FILES['preview']) && $_FILES['preview']['error'] != 4) {
-            if (call_user_func('validateFile', $_FILES['preview']))
+            if (call_user_func('validateFile', $_FILES['preview'])) {
+                $f_name = $_FILES['preview']['name'];
+                $f_tmp_name = $_FILES['preview']['tmp_name'];
                 move_uploaded_file($f_tmp_name, $f_name);
+            }
             else
                 form_errors($errors, 'preview', 'Некорректный фаил!');
         }
