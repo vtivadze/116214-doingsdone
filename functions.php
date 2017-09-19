@@ -27,9 +27,9 @@ function validateName($value) {
     return mb_strlen($value) < 15;
 }
 
-// function validateProject($value) {
-//     return array_key_exists($value, $GLOBALS['projects']);
-// }
+function validateProject($value) {
+    return select_data($GLOBALS('con'), 'SELECT id FROM projects WHERE id = ?', [$value]);
+}
 
 function validateFile($value) {
     $f_name = $value['name'];
@@ -62,15 +62,15 @@ function form_errors(&$errors, $name, $msg) {
     $errors[$name]['class'] = 'form__input--error';
 }
 
-// function add_new_task(&$tasks, $name, $date, $project, $done) {
-//     array_unshift($tasks,
-//     [
-//         'Задача' => $name,
-//         'Дата выполнения' => $date,
-//         'Категория' => $project,
-//         'Выполнен' => $done
-//     ]);
-// }
+function add_new_task(&$tasks, $name, $date, $project, $done) {
+    array_unshift($tasks,
+    [
+        'Задача' => $name,
+        'Дата выполнения' => $date,
+        'Категория' => $project,
+        'Выполнен' => $done
+    ]);
+}
 
 
 function select_data($con, $sql, $data = []) {

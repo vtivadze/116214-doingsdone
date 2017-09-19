@@ -58,7 +58,7 @@
 
                                     <ul class="expand-list hidden">
                                         <li class="expand-list__item">
-                                            <a href="#">Выполнить</a>
+                                            <a href="/index.php?rm=<?=$t['id']?>">Выполнить</a>
                                         </li>
 
                                         <li class="expand-list__item">

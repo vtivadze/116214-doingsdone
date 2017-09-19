@@ -1,11 +1,11 @@
 <?php
 session_start();
 error_reporting(-1);
+
 //echo password_hash('vaxovaxo', PASSWORD_DEFAULT); exit;
-require_once 'functions.php';
 require_once 'mysql_helper.php';
-//require_once 'userdata.php';
 require_once 'init.php';
+require_once 'functions.php';
 
 // показывать или нет выполненные задачи
 $show_complete_tasks = $_COOKIE['show_completed'] ?? 0;
@@ -31,6 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
     //cookie
     if (isset($_GET['show_completed'])) {
         setcookie('show_completed', $_GET['show_completed']);
+        header("Location: /");
+        exit;
+    }
+
+    if (isset($_GET['rm'])) {
+        arbitrary_query($con, 'UPDATE tasks SET date_completion = now() WHERE id = ?', [$_GET['rm']]);
         header("Location: /");
         exit;
     }
