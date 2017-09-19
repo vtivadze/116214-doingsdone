@@ -3,20 +3,65 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Дела в порядке!</title>
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/style.css">
+  <title>Document</title>
+  <link rel="stylesheet" href="../css/normalize.css">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 
-<body class="body-background <?=$overlay?>"><!--class="overlay"-->
+<body><!--class="overlay"-->
   <h1 class="visually-hidden">Дела в порядке</h1>
 
   <div class="page-wrapper">
-    <div class="container">
-     
-      <?=$header;?>
-      <?=$content;?>
+    <div class="container container--with-sidebar">
+      <header class="main-header">
+        <a href="#">
+          <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
+        </a>
+      </header>
 
+      <div class="content">
+        <section class="content__side">
+          <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
+
+          <a class="button button--transparent content__side-button" href="#">Войти</a>
+        </section>
+
+        <main class="content__main">
+          <h2 class="content__main-heading">Регистрация аккаунта</h2>
+
+          <form class="form" action="index.php" method="post">
+            <div class="form__row">
+              <label class="form__label" for="email">E-mail <sup>*</sup></label>
+
+              <input class="form__input <?=$errors['email']['class'] ?? '';?>" type="text" name="email" id="email" value="" placeholder="Введите e-mail">
+
+              <p class="form__message"><?=$errors['email']['msg'] ?? '';?></p>
+            </div>
+
+            <div class="form__row">
+              <label class="form__label" for="password">Пароль <sup>*</sup></label>
+
+              <input class="form__input <?=$errors['password']['class'] ?? '';?>" type="password" name="password" id="password" value="" placeholder="Введите пароль">
+              <p class="form__message"><?=$errors['password']['msg'] ?? '';?></p>
+            </div>
+
+            <div class="form__row">
+              <label class="form__label" for="name">Имя <sup>*</sup></label>
+
+              <input class="form__input <?=$errors['name']['class'] ?? '';?>" type="text" name="name" id="name" value="" placeholder="Введите имя">
+              <p class="form__message"><?=$errors['name']['msg'] ?? '';?></p>
+            </div>
+
+            <div class="form__row form__row--controls">
+              <? if ($errors ?? false): ?>
+                <p class="error-massage">Пожалуйста, исправьте ошибки в форме</p>
+              <? endif; ?>
+
+              <input class="button" type="submit" name="register" value="Зарегистрироваться">
+            </div>
+          </form>
+        </main>
+      </div>
     </div>
   </div>
 
@@ -27,6 +72,8 @@
 
         <p>Веб-приложение для удобного ведения списка дел.</p>
       </div>
+
+      <!--<a class="main-footer__button button button--plus">Добавить задачу</a>-->
 
       <div class="main-footer__social social">
         <span class="visually-hidden">Мы в соцсетях:</span>
@@ -56,44 +103,5 @@
       </div>
     </div>
   </footer>
-
-  <div class="modal" <?=$hidden?>>
-    <button class="modal__close" type="button" name="button">Закрыть</button>
-
-    <h2 class="modal__heading">Вход на сайт</h2>
-
-    <? if ($registered): ?>
-      <p>Теперь вы можете войти, используя свой email и пароль!</p>
-    <? endif; ?>
-    
-    <form class="form" class="" action="index.php" method="post">
-      <div class="form__row">
-        <label class="form__label" for="email">E-mail <sup>*</sup></label>
-
-        <input class="form__input <?=$errors['email']['class'] ?? '';?>" type="text" name="email" id="email" value="<?=$email?>" placeholder="Введите e-mail">
-
-        <p class="form__message"><?=$errors['email']['msg'] ?? '';?></p>
-      </div>
-
-      <div class="form__row">
-        <label class="form__label" for="password">Пароль <sup>*</sup></label>
-
-        <input class="form__input <?=$errors['email']['class'] ?? '';?>" type="password" name="password" id="password" value="<?=$password?>" placeholder="Введите пароль">
-
-        <p class="form__message"><?=$errors['password']['msg'] ?? '';?></p>
-      </div>
-
-      <div class="form__row">
-        <label class="checkbox">
-          <input class="checkbox__input visually-hidden" type="checkbox" checked>
-          <span class="checkbox__text">Запомнить меня</span>
-        </label>
-      </div>
-
-      <div class="form__row form__row--controls">
-        <input class="button" type="submit" name="login" value="Войти">
-      </div>
-    </form>
-  </div>
 </body>
 </html>

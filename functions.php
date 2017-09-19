@@ -1,18 +1,6 @@
 <?php
 require_once "mysql_helper.php";
 
-// function get_tasks_count($tasks, $project) {
-//     if (strtolower($project) == strtolower('Все')) {
-//         $count = count($tasks);
-//     } else {
-//         $count = 0;
-//         foreach($tasks as $t)
-//             if(strtolower($t['Категория']) == strtolower($project))
-//                 $count++;
-//     }
-//     return $count;
-// }
-
 function get_days_until_deadline($date_deadline) {
     $current_ts = time();
     $task_deadline_ts = strtotime($date_deadline);
@@ -84,13 +72,6 @@ function form_errors(&$errors, $name, $msg) {
 //     ]);
 // }
 
-// function get_proj_tasks($projects, $project, $tasks) {
-//     foreach ($tasks as $key => $value) {
-//         if ($value['Категория'] === $projects[$project] || $project == 0)
-//             $proj_tasks[] = $tasks[$key];
-//     }
-//     return $proj_tasks ?? [];
-// }
 
 function select_data($con, $sql, $data = []) {
     $stmt = db_get_prepare_stmt($con, $sql, $data);
@@ -125,8 +106,3 @@ function arbitrary_query($con, $sql, $data = []) {
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     return mysqli_stmt_execute($stmt);
 }
-
-//mysqli_error
-//mysqli_insert_id
-//mysqli_real_escape_string
-//mysqli_stmt_execute

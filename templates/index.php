@@ -49,7 +49,7 @@
                                     <span class="checkbox__text"><?=htmlspecialchars(trim($t['name']))?></span>
                                 </label>
                             </td>
-                            <td class="task__date"><?=htmlspecialchars(trim($t['deadline']))?></td>
+                            <td class="task__date"><?=htmlspecialchars(trim($t['deadline'] ?? 'Нет'))?></td>
 
                             <td class="task__controls">
 

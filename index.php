@@ -182,6 +182,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
         }
     }
 
+    if (isset($_POST['register'])) {
+        
+        $email = trim($_POST['email']);
+        $password = trim($_POST['password']);
+        $name = trim($_POST['name']);
+
+        $required = ['email', 'password', 'name'];
+        $rules = ['email' => 'validateEmail'];
+
+        $errors = [];
+        foreach ($_POST as $key => $value) {
+            if (in_array($key, $required) && $value == '') {
+                form_errors($errors, $key, 'Заполните это поле!');
+                continue;
+            }
+
+            if (array_key_exists($key, $rules)) {
+                if (!call_user_func($rules[$key], $value))
+                    form_errors($errors, $key, 'Заполните поле корректно!');
+            }
+        }
+
+
+        if (select_data($con, 'SELECT id FROM users WHERE email = ?', [$email])) {
+            $errors['email'] = [
+                'class' => 'form__input--error',
+                'msg' => 'Email используется другим пользователем!'
+            ];
+        }
+
+        if (!count($errors)) {
+            
+            insert_data($con, 'users', [
+                'email' => $email,
+                'name' => $name,
+                'password' => password_hash($password, PASSWORD_DEFAULT)
+            ]); 
+
+            $registered = select_data($con, 'SELECT name, password FROM users WHERE email = ?', [$email]);
+
+        }
+    }
 }
 
 $header = render('header', []);
@@ -194,7 +236,7 @@ if (isset($error)) {
 
 if (!isset($_SESSION['name'])) {
     
-    if (isset($_GET['login']) && !isset($error)) {
+    if ((isset($_GET['login']) && !isset($error)) || isset($registered)) {
         $overlay = 'overlay';
         $hidden = '';
     }
@@ -209,8 +251,19 @@ if (!isset($_SESSION['name'])) {
         'password' => $password ?? '',
         'errors' => $errors ?? [],
         'header' => $header,
-        'content' => $err_cont ?? $content
+        'content' => $err_cont ?? $content,
+        'registered' => $registered ?? false
     ]);
+
+    if (isset($_GET['register']) || (isset($_POST['register']) && !isset($registered))) {
+        $main = render('register', [
+            'email' => $email ?? '',
+            'password' => $password ?? '',
+            'name' => $name ?? '',
+            'errors' => $errors ?? []
+        ]);
+    }
+
 
 } else {
 
