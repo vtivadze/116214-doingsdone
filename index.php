@@ -1,18 +1,10 @@
 <?php
 session_start();
-
 error_reporting(-1);
-require_once 'functions.php';
+
 require_once 'mysql_helper.php';
-require_once 'userdata.php';
 require_once 'init.php';
-
-//$res = select_data($link, 'SELECT * FROM users WHERE id = ?', [2]);
-//$res = insert_data($link, 'projects', ['name' => 'project', 'user_id' => 4]);
-//$res = arbitrary_query($link, "UPDATE projects SET name = ? WHERE name = ?", ['New Project', 'project']);
-//$res = arbitrary_query($link, "DELETE FROM projects WHERE name = ?", ['New Project']);
-//var_dump($res); exit;
-
+require_once 'functions.php';
 
 // показывать или нет выполненные задачи
 $show_complete_tasks = $_COOKIE['show_completed'] ?? 0;
@@ -30,9 +22,10 @@ $date_deadline = date('d.m.Y', $task_deadline_ts);
 // в эту переменную запишите кол-во дней до даты задачи
 $days_until_deadline = floor(($task_deadline_ts - $current_ts) / 86400);
 
-require_once 'data.php';
+$projects = select_data($con, 'SELECT projects.*, count(tasks.proj_id) AS `count` FROM projects LEFT JOIN tasks ON projects.id = tasks.proj_id GROUP BY projects.id', []);
+$tasks = select_data($con, 'SELECT * FROM tasks', []);
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && $link) {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
 
     //cookie
     if (isset($_GET['show_completed'])) {
@@ -41,16 +34,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $link) {
         exit;
     }
 
+    if (isset($_GET['rm'])) {
+        arbitrary_query($con, 'UPDATE tasks SET date_completion = now() WHERE id = ?', [$_GET['rm']]);
+        header("Location: /");
+        exit;
+    }
+
     //main
     $project = (int)trim($_GET['project'] ?? 0);
 
-    if (!isset($projects[$project])) {
+    if ($project != 0 && !select_data($con, 'SELECT id FROM projects WHERE id = ?', [$project])) {
         http_response_code(404);
         exit;
-    } else 
-        $proj_tasks = get_proj_tasks($projects, $project, $tasks);
+    } else {
+        if ($project != 0) {
+            $proj_tasks = select_data($con, 'SELECT * FROM tasks WHERE proj_id = ?', [$project]);
+        }
+        else {
+             $proj_tasks = select_data($con, 'SELECT * FROM tasks', []);
+        }
+    }
         
-
     //index
     $content = render('index', 
     [
@@ -73,13 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $link) {
 
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && $link) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
     if (isset($_POST['add'])) {
 
         $name = trim($_POST['name']);
         $project = trim($_POST['project']);
         $date = trim($_POST['date']);
-        
+
         $required = ['name', 'project', 'date'];
         $rules = 
         [
@@ -102,14 +106,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $link) {
         }
 
         if (isset($_FILES['preview']) && $_FILES['preview']['error'] != 4) {
-            if (call_user_func('validateFile', $_FILES['preview']))
+            if (call_user_func('validateFile', $_FILES['preview'])) {
+                $f_name = $_FILES['preview']['name'];
+                $f_tmp_name = $_FILES['preview']['tmp_name'];
                 move_uploaded_file($f_tmp_name, $f_name);
+            }
             else
                 form_errors($errors, 'preview', 'Некорректный фаил!');
         }
 
         if (!count($errors)) {
-            add_new_task($tasks, $name, $date, $projects[$project], 'Нет');
+            $res = insert_data($con, 'tasks', [
+                'name' => $name,
+                'file' => $f_name ?? null,
+                'deadline' => $date ? form_date($date) : null,
+                'proj_id' => (int)$project
+            ]);
+
+            header("Location: /");
+            exit;
+
             $content = render('index', 
             [
                 'show_complete_tasks' => $show_complete_tasks,
@@ -153,20 +169,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $link) {
 
         if (!count($errors)) {
             
-            foreach ($users as $user) {
-                if ($user['email'] == $email && password_verify($password , $user['password'])) {
-                    $_SESSION['email'] = $email;
-                    $_SESSION['name'] = $user['name'];
+            $user_dt = select_data($con, 'SELECT name, password FROM users WHERE email = ?', [$email]);
+            
+            if ($user_dt && password_verify($password, $user_dt[0]['password'])) {
+                $_SESSION['email'] = $email;
+                $_SESSION['name'] = $user_dt[0]['name'];
 
-                    header("Location: /");
-                    exit;
-                } else {
-                    $overlay = 'overlay';
-                    $hidden = '';
-                    $errors['password']['msg'] = "Вы ввели неверный пароль!";
-                    $errors['password']['class'] = "form__input--error";
+                header("Location: /");
+                exit;
+            } else {
+                $overlay = 'overlay';
+                $hidden = '';
+                $errors['password']['msg'] = "Вы ввели неверный пароль!";
+                $errors['password']['class'] = "form__input--error";
 
-                }
             }
 
         } else {
@@ -177,6 +193,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $link) {
         }
     }
 
+    if (isset($_POST['register'])) {
+        
+        $email = trim($_POST['email']);
+        $password = trim($_POST['password']);
+        $name = trim($_POST['name']);
+
+        $required = ['email', 'password', 'name'];
+        $rules = ['email' => 'validateEmail'];
+
+        $errors = [];
+        foreach ($_POST as $key => $value) {
+            if (in_array($key, $required) && $value == '') {
+                form_errors($errors, $key, 'Заполните это поле!');
+                continue;
+            }
+
+            if (array_key_exists($key, $rules)) {
+                if (!call_user_func($rules[$key], $value))
+                    form_errors($errors, $key, 'Заполните поле корректно!');
+            }
+        }
+
+
+        if (select_data($con, 'SELECT id FROM users WHERE email = ?', [$email])) {
+            $errors['email'] = [
+                'class' => 'form__input--error',
+                'msg' => 'Email используется другим пользователем!'
+            ];
+        }
+
+        if (!count($errors)) {
+            
+            insert_data($con, 'users', [
+                'email' => $email,
+                'name' => $name,
+                'password' => password_hash($password, PASSWORD_DEFAULT)
+            ]); 
+
+            $registered = select_data($con, 'SELECT name, password FROM users WHERE email = ?', [$email]);
+
+        }
+    }
 }
 
 $header = render('header', []);
@@ -189,7 +247,7 @@ if (isset($error)) {
 
 if (!isset($_SESSION['name'])) {
     
-    if (isset($_GET['login']) && !isset($error)) {
+    if ((isset($_GET['login']) && !isset($error)) || isset($registered)) {
         $overlay = 'overlay';
         $hidden = '';
     }
@@ -204,8 +262,19 @@ if (!isset($_SESSION['name'])) {
         'password' => $password ?? '',
         'errors' => $errors ?? [],
         'header' => $header,
-        'content' => $err_cont ?? $content
+        'content' => $err_cont ?? $content,
+        'registered' => $registered ?? false
     ]);
+
+    if (isset($_GET['register']) || (isset($_POST['register']) && !isset($registered))) {
+        $main = render('register', [
+            'email' => $email ?? '',
+            'password' => $password ?? '',
+            'name' => $name ?? '',
+            'errors' => $errors ?? []
+        ]);
+    }
+
 
 } else {
 

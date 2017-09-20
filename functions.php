@@ -1,18 +1,6 @@
 <?php
 require_once "mysql_helper.php";
 
-function get_tasks_count($tasks, $project) {
-    if (strtolower($project) == strtolower('Все')) {
-        $count = count($tasks);
-    } else {
-        $count = 0;
-        foreach($tasks as $t)
-            if(strtolower($t['Категория']) == strtolower($project))
-                $count++;
-    }
-    return $count;
-}
-
 function get_days_until_deadline($date_deadline) {
     $current_ts = time();
     $task_deadline_ts = strtotime($date_deadline);
@@ -32,7 +20,7 @@ function render($template, $params = []) {
 }
 
 function validateDate($value) {
-    return preg_match('/^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(19|20)\d\d$/', $value) && (strtotime($value) > time());
+    return preg_match('/^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(19|20)\d\d$/', $value);
 }
 
 function validateName($value) {
@@ -40,7 +28,7 @@ function validateName($value) {
 }
 
 function validateProject($value) {
-    return array_key_exists($value, $GLOBALS['projects']);
+    return select_data($GLOBALS['con'], 'SELECT id FROM projects WHERE id = ?', [$value]);
 }
 
 function validateFile($value) {
@@ -84,16 +72,9 @@ function add_new_task(&$tasks, $name, $date, $project, $done) {
     ]);
 }
 
-function get_proj_tasks($projects, $project, $tasks) {
-    foreach ($tasks as $key => $value) {
-        if ($value['Категория'] === $projects[$project] || $project == 0)
-            $proj_tasks[] = $tasks[$key];
-    }
-    return $proj_tasks ?? [];
-}
 
-function select_data($link, $sql, $data = []) {
-    $stmt = db_get_prepare_stmt($link, $sql, $data);
+function select_data($con, $sql, $data = []) {
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
     if (mysqli_stmt_execute($stmt)) {
         $result = $stmt->get_result();
         return mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -103,7 +84,7 @@ function select_data($link, $sql, $data = []) {
     }
 }
 
-function insert_data($link, $table, $data) {
+function insert_data($con, $table, $data) {
     $keys = array_keys($data);
     $cols = implode(', ', $keys);
     $values = array_values($data);
@@ -111,22 +92,22 @@ function insert_data($link, $table, $data) {
     $vals = substr($vals, 0, -2);
 
     $sql = "INSERT INTO $table ($cols) VALUES ($vals)";
+    $stmt = db_get_prepare_stmt($con, $sql, $values);
 
-    $stmt = db_get_prepare_stmt($link, $sql, $values);
     if (mysqli_stmt_execute($stmt)) {
-        return mysqli_insert_id($link);
+        return mysqli_insert_id($con);
     }
     else {
         return false;
     }
 }
 
-function arbitrary_query($link, $sql, $data = []) {
-    $stmt = db_get_prepare_stmt($link, $sql, $data);
+function arbitrary_query($con, $sql, $data = []) {
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
     return mysqli_stmt_execute($stmt);
 }
 
-//mysqli_error
-//mysqli_insert_id
-//mysqli_real_escape_string
-//mysqli_stmt_execute
+function form_date($date) {
+    $dt = explode('.', $date);
+    return $dt[2] . '-' . $dt[1] . '-' . $dt[0];
+}

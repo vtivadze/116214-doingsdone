@@ -40,25 +40,25 @@
                 <table class="tasks">
                   
                     <? foreach($tasks as $t): ?>
-                        <? if($t['Выполнен'] == 'Да' && $show_complete_tasks != 1) continue;?>
-                        <tr class="tasks__item task <?=$t['Выполнен'] == 'Да' ? 'task--completed' : ''; ?> <?= ($t['Дата выполнения'] != 'Нет' && get_days_until_deadline($t['Дата выполнения']) <= 1) ? 'task--important' : ''; ?>">
+                        <? if($t['date_completion'] != '' && $show_complete_tasks != 1) continue;?>
+                        <tr class="tasks__item task <?=!is_null($t['date_completion']) ? 'task--completed' : ''; ?> <?= (!is_null($t['date_completion']) && get_days_until_deadline($t['deadline']) <= 1) ? 'task--important' : ''; ?>">
 
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
                                     <input class="checkbox__input visually-hidden" type="checkbox">
-                                    <span class="checkbox__text"><?=htmlspecialchars(trim($t['Задача']))?></span>
+                                    <span class="checkbox__text"><?=htmlspecialchars(trim($t['name']))?></span>
                                 </label>
                             </td>
-                            <td class="task__date"><?=htmlspecialchars(trim($t['Дата выполнения']))?></td>
+                            <td class="task__date"><?=htmlspecialchars(trim($t['deadline'] ?? 'Нет'))?></td>
 
                             <td class="task__controls">
 
-                                <? if($t['Выполнен'] == 'Нет'): ?>
-                                    <button class="expand-control" type="button" name="button"><?=htmlspecialchars(trim($t['Задача']))?></button>
+                                <? if(is_null($t['date_completion'])): ?>
+                                    <button class="expand-control" type="button" name="button"><?=htmlspecialchars(trim($t['name']))?></button>
 
                                     <ul class="expand-list hidden">
                                         <li class="expand-list__item">
-                                            <a href="#">Выполнить</a>
+                                            <a href="/index.php?rm=<?=$t['id']?>">Выполнить</a>
                                         </li>
 
                                         <li class="expand-list__item">
