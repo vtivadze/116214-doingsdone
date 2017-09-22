@@ -54,12 +54,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
              $proj_tasks = select_data($con, 'SELECT * FROM tasks', []);
         }
     }
-        
+    
+    if (isset($_GET['tasks'])) {
+        switch($_GET['tasks']) {
+            case 'today':
+                $where = ' WHERE deadline = DATE(NOW())';
+                break;
+            case 'tomorrow':
+                $where = ' WHERE deadline = DATE(SUBDATE(NOW(), INTERVAL -1 DAY))';
+                break;
+            case 'expired':
+                $where = ' WHERE deadline < DATE(now()) AND date_completion IS NULL';
+                break;
+            default:
+                $where = '';
+        }
+        $proj_tasks = select_data($con, 'SELECT * FROM tasks' . $where, []);
+    }
     //index
     $content = render('index', 
     [
         'show_complete_tasks' => $show_complete_tasks,
         'tasks' => $proj_tasks,
+        'show' => $_GET['tasks'] ?? 'all'
     ]);
 
     //add task

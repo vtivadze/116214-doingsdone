@@ -23,3 +23,10 @@ $checkbox.addEventListener('change', function(event) {
 
   window.location = '/index.php?show_completed=' + is_checked;
 });
+
+var radios = document.querySelectorAll('.radio-button__text');
+for (var i = 0; i < radios.length; i++) {
+	radios[i].addEventListener('click', function() {
+		window.location = '/index.php?tasks=' + this.dataset.show;
+	}, false);
+}

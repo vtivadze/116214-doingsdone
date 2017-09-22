@@ -10,23 +10,23 @@
                 <div class="tasks-controls">
                     <div class="radio-button-group">
                         <label class="radio-button">
-                            <input class="radio-button__input visually-hidden" type="radio" name="radio" checked="">
-                            <span class="radio-button__text">Все задачи</span>
+                            <input class="radio-button__input visually-hidden" type="radio" name="radio" <?=(isset($show) && $show == 'all') ? 'checked' : '';?>>
+                            <span class="radio-button__text" data-show="all" >Все задачи</span>
                         </label>
 
                         <label class="radio-button">
-                            <input class="radio-button__input visually-hidden" type="radio" name="radio">
-                            <span class="radio-button__text">Повестка дня</span>
+                            <input class="radio-button__input visually-hidden" type="radio" name="radio" <?=(isset($show) && $show == 'today') ? 'checked' : '';?>>
+                            <span class="radio-button__text" data-show="today">Повестка дня</span>
                         </label>
 
                         <label class="radio-button">
-                            <input class="radio-button__input visually-hidden" type="radio" name="radio">
-                            <span class="radio-button__text">Завтра</span>
+                            <input class="radio-button__input visually-hidden" type="radio" name="radio" <?=(isset($show) && $show == 'tomorrow') ? 'checked' : '';?>>
+                            <span class="radio-button__text" data-show="tomorrow">Завтра</span>
                         </label>
 
                         <label class="radio-button">
-                            <input class="radio-button__input visually-hidden" type="radio" name="radio">
-                            <span class="radio-button__text">Просроченные</span>
+                            <input class="radio-button__input visually-hidden" type="radio" name="radio" <?=(isset($show) && $show == 'expired') ? 'checked' : '';?>>
+                            <span class="radio-button__text" data-show="expired">Просроченные</span>
                         </label>
                     </div>
 
