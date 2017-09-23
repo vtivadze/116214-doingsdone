@@ -5,6 +5,7 @@ error_reporting(-1);
 require_once 'mysql_helper.php';
 require_once 'init.php';
 require_once 'functions.php';
+require_once 'vendor/autoload.php';
 
 // показывать или нет выполненные задачи
 $show_complete_tasks = $_COOKIE['show_completed'] ?? 0;
