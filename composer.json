@@ -1,6 +1,8 @@
 {
-    "name": "doingsdone",
-    "description": "Личный проект «Дела в Порядке» от HTML Academy",
+    "name": "vakhtang_tivadze/doingsdone",
+    "description": "web service for daily tasks managment",
     "type": "project",
-    "require": {}
+    "require": {
+        "swiftmailer/swiftmailer": "^6.0"
+    }
 }
