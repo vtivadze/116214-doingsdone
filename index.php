@@ -1,17 +1,4 @@
 <?php
-
-$content = file_get_contents('composer.json');
-//echo $content; exit;
-if (strpos($content, '\n')) {
-    echo 'yes';
-}
-else {
-    echo 'no';
-}
-
-//$content = str_replace('\n', '\r\n', $content);
-
-exit;
 session_start();
 error_reporting(-1);
 
