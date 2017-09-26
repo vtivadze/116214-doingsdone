@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Sep 15, 2017 at 12:49 AM
+-- Generation Time: Sep 26, 2017 at 09:21 PM
 -- Server version: 5.7.19
 -- PHP Version: 7.1.7
 
@@ -46,7 +46,7 @@ CREATE TABLE `tasks` (
   `date_completion` timestamp NULL DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   `file` varchar(100) DEFAULT NULL,
-  `deadline` date DEFAULT NULL,
+  `deadline` datetime DEFAULT NULL,
   `proj_id` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

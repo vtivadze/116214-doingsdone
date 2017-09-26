@@ -59,13 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
     if (isset($_GET['tasks'])) {
         switch($_GET['tasks']) {
             case 'today':
-                $where = ' WHERE deadline = DATE(NOW())';
+                $where = ' WHERE DATE(deadline) = DATE(NOW())';
                 break;
             case 'tomorrow':
-                $where = ' WHERE deadline = DATE(SUBDATE(NOW(), INTERVAL -1 DAY))';
+                $where = ' WHERE DATE(deadline) = DATE(SUBDATE(NOW(), INTERVAL -1 DAY))';
                 break;
             case 'expired':
-                $where = ' WHERE deadline < DATE(now()) AND date_completion IS NULL';
+                $where = ' WHERE DATE(deadline) < DATE(now()) AND date_completion IS NULL';
                 break;
             default:
                 $where = '';
@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
         if (!count($errors)) {
             $res = insert_data($con, 'tasks', [
                 'name' => $name,
-                'file' => $f_name ?? null,
+                'file' => $f_name ?? '',
                 'deadline' => $date ? form_date($date) : null,
                 'proj_id' => (int)$project
             ]);

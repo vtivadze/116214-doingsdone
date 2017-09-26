@@ -42,7 +42,7 @@ function validateFile($value) {
 
     if (is_uploaded_file($f_tmp_name) &&
         in_array($f_type, $mime) &&
-        $f_size < 2000000 &&
+        $f_size < 5000000 &&
         !$f_error)
     {
         $result = true;
@@ -90,8 +90,8 @@ function insert_data($con, $table, $data) {
     $values = array_values($data);
     $vals = str_repeat('?, ', count($values));
     $vals = substr($vals, 0, -2);
-
     $sql = "INSERT INTO $table ($cols) VALUES ($vals)";
+    
     $stmt = db_get_prepare_stmt($con, $sql, $values);
 
     if (mysqli_stmt_execute($stmt)) {
@@ -109,5 +109,5 @@ function arbitrary_query($con, $sql, $data = []) {
 
 function form_date($date) {
     $dt = explode('.', $date);
-    return $dt[2] . '-' . $dt[1] . '-' . $dt[0];
+    return $dt[2] . '-' . $dt[1] . '-' . $dt[0] . ' 23:00:00';
 }

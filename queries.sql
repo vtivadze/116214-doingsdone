@@ -10,16 +10,16 @@ INSERT INTO `projects` (`name`, `user_id`) VALUES
 
 
 INSERT INTO `tasks` (`date_creation`, `name`, `deadline`, `proj_id`) VALUES
-	('2018-05-25', 'Собеседование в IT компании', '2018-06-01', 3);
+	('2018-05-25', 'Собеседование в IT компании', '2017-09-26 23:00:00', 3);
 
 INSERT INTO `tasks` (`date_creation`, `name`, `deadline`, `proj_id`) VALUES
-	('2018-05-24', 'Выполнить тестовое задание', '2018-05-02', 3);
+	('2018-05-24', 'Выполнить тестовое задание', '2017-09-26 23:00:00', 3);
 
 INSERT INTO `tasks` (`date_creation`, `date_completion`, `name`, `deadline`, `proj_id`) VALUES
-	('2018-04-15', '20.04.2018' , 'Сделать задание первого раздела', '2018-04-21', 2);	
+	('2018-04-15', '20.04.2018' , 'Сделать задание первого раздела', '2017-09-26 23:00:00', 2);	
 
 INSERT INTO `tasks` (`date_creation`, `name`, `deadline`, `proj_id`) VALUES
-	('2018-04-20','Встреча с другом', '2018-04-22', 1);
+	('2018-04-20','Встреча с другом', '2017-09-26 23:00:00', 1);
 
 INSERT INTO `tasks` (`date_creation`, `name`, `proj_id`) VALUES
 	('2018-03-18', 'Купить корм для кота', 4);
