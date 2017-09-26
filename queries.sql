@@ -16,7 +16,7 @@ INSERT INTO `tasks` (`date_creation`, `name`, `deadline`, `proj_id`) VALUES
 	('2018-05-24', 'Выполнить тестовое задание', '2017-09-26 23:00:00', 3);
 
 INSERT INTO `tasks` (`date_creation`, `date_completion`, `name`, `deadline`, `proj_id`) VALUES
-	('2018-04-15', '20.04.2018' , 'Сделать задание первого раздела', '2017-09-26 23:00:00', 2);	
+	('2018-04-15', '2018-04-20' , 'Сделать задание первого раздела', '2017-09-26 23:00:00', 2);	
 
 INSERT INTO `tasks` (`date_creation`, `name`, `deadline`, `proj_id`) VALUES
 	('2018-04-20','Встреча с другом', '2017-09-26 23:00:00', 1);

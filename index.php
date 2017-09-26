@@ -23,8 +23,8 @@ $date_deadline = date('d.m.Y', $task_deadline_ts);
 // в эту переменную запишите кол-во дней до даты задачи
 $days_until_deadline = floor(($task_deadline_ts - $current_ts) / 86400);
 
-$projects = select_data($con, 'SELECT projects.*, count(tasks.proj_id) AS `count` FROM projects LEFT JOIN tasks ON projects.id = tasks.proj_id GROUP BY projects.id', []);
-$tasks = select_data($con, 'SELECT * FROM tasks', []);
+$projects = selectData($con, 'SELECT projects.*, count(tasks.proj_id) AS `count` FROM projects LEFT JOIN tasks ON projects.id = tasks.proj_id GROUP BY projects.id', []);
+$tasks = selectData($con, 'SELECT * FROM tasks', []);
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
 
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
     }
 
     if (isset($_GET['rm'])) {
-        arbitrary_query($con, 'UPDATE tasks SET date_completion = now() WHERE id = ?', [$_GET['rm']]);
+        arbitraryQuery($con, 'UPDATE tasks SET date_completion = now() WHERE id = ?', [$_GET['rm']]);
         header("Location: /");
         exit;
     }
@@ -44,15 +44,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
     //main
     $project = (int)trim($_GET['project'] ?? 0);
 
-    if ($project != 0 && !select_data($con, 'SELECT id FROM projects WHERE id = ?', [$project])) {
+    if ($project != 0 && !selectData($con, 'SELECT id FROM projects WHERE id = ?', [$project])) {
         http_response_code(404);
         exit;
     } else {
         if ($project != 0) {
-            $proj_tasks = select_data($con, 'SELECT * FROM tasks WHERE proj_id = ?', [$project]);
+            $proj_tasks = selectData($con, 'SELECT * FROM tasks WHERE proj_id = ?', [$project]);
         }
         else {
-             $proj_tasks = select_data($con, 'SELECT * FROM tasks', []);
+             $proj_tasks = selectData($con, 'SELECT * FROM tasks', []);
         }
     }
     
@@ -70,8 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
             default:
                 $where = '';
         }
-        $proj_tasks = select_data($con, 'SELECT * FROM tasks' . $where, []);
+        $proj_tasks = selectData($con, 'SELECT * FROM tasks' . $where, []);
     }
+
     //index
     $content = render('index', 
     [
@@ -113,13 +114,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
         $errors = [];
         foreach ($_POST as $key => $value) {
             if (in_array($key, $required) && $value == '') {
-                form_errors($errors, $key, 'Заполните это поле!');
+                formErrors($errors, $key, 'Заполните это поле!');
                 continue;
             }
 
             if (array_key_exists($key, $rules)) {
                 if (!call_user_func($rules[$key], $value))
-                    form_errors($errors, $key, 'Заполните поле корректно!');
+                    formErrors($errors, $key, 'Заполните поле корректно!');
             }
         }
 
@@ -130,14 +131,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
                 move_uploaded_file($f_tmp_name, $f_name);
             }
             else
-                form_errors($errors, 'preview', 'Некорректный фаил!');
+                formErrors($errors, 'preview', 'Некорректный фаил!');
         }
 
         if (!count($errors)) {
-            $res = insert_data($con, 'tasks', [
+            $res = insertData($con, 'tasks', [
                 'name' => $name,
                 'file' => $f_name ?? '',
-                'deadline' => $date ? form_date($date) : null,
+                'deadline' => $date ? formDate($date) : null,
                 'proj_id' => (int)$project
             ]);
 
@@ -175,19 +176,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
         $errors = [];
         foreach ($_POST as $key => $value) {
             if (in_array($key, $required) && $value == '') {
-                form_errors($errors, $key, 'Заполните это поле!');
+                formErrors($errors, $key, 'Заполните это поле!');
                 continue;
             }
 
             if (array_key_exists($key, $rules)) {
                 if (!call_user_func($rules[$key], $value))
-                    form_errors($errors, $key, 'Заполните поле корректно!');
+                    formErrors($errors, $key, 'Заполните поле корректно!');
             }
         }
 
         if (!count($errors)) {
             
-            $user_dt = select_data($con, 'SELECT name, password FROM users WHERE email = ?', [$email]);
+            $user_dt = selectData($con, 'SELECT name, password FROM users WHERE email = ?', [$email]);
             
             if ($user_dt && password_verify($password, $user_dt[0]['password'])) {
                 $_SESSION['email'] = $email;
@@ -223,18 +224,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
         $errors = [];
         foreach ($_POST as $key => $value) {
             if (in_array($key, $required) && $value == '') {
-                form_errors($errors, $key, 'Заполните это поле!');
+                formErrors($errors, $key, 'Заполните это поле!');
                 continue;
             }
 
             if (array_key_exists($key, $rules)) {
                 if (!call_user_func($rules[$key], $value))
-                    form_errors($errors, $key, 'Заполните поле корректно!');
+                    formErrors($errors, $key, 'Заполните поле корректно!');
             }
         }
 
 
-        if (select_data($con, 'SELECT id FROM users WHERE email = ?', [$email])) {
+        if (selectData($con, 'SELECT id FROM users WHERE email = ?', [$email])) {
             $errors['email'] = [
                 'class' => 'form__input--error',
                 'msg' => 'Email используется другим пользователем!'
@@ -243,13 +244,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
 
         if (!count($errors)) {
             
-            insert_data($con, 'users', [
+            insertData($con, 'users', [
                 'email' => $email,
                 'name' => $name,
                 'password' => password_hash($password, PASSWORD_DEFAULT)
             ]); 
 
-            $registered = select_data($con, 'SELECT name, password FROM users WHERE email = ?', [$email]);
+            $registered = selectData($con, 'SELECT name, password FROM users WHERE email = ?', [$email]);
 
         }
     }
