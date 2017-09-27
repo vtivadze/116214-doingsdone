@@ -23,17 +23,17 @@
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
 
-                        <li class="main-navigation__list-item main-navigation__list-item--active">
+                        <li class="main-navigation__list-item <?=$project == 0 ? 'main-navigation__list-item--active' : '';?>">
                             <a class="main-navigation__list-item-link" href="/index.php?project=0">Все</a>
                             <span class="main-navigation__list-item-count"><?=count($tasks);?></span>
                         </li>
 
-                    <? foreach ($projects as $p): ?>
-                        <li class="main-navigation__list-item">
+                    <?php foreach ($projects as $p): ?>
+                        <li class="main-navigation__list-item <?=$project == $p['id'] ? 'main-navigation__list-item--active' : ''; ?>">
                             <a class="main-navigation__list-item-link" href="/index.php?project=<?=$p['id'];?>"><?=htmlspecialchars(trim($p['name']))?></a>
                             <span class="main-navigation__list-item-count"><?=$p['count'];?></span>
                         </li>
-                    <? endforeach; ?>
+                    <?php endforeach; ?>
                     </ul>
                 </nav>
 

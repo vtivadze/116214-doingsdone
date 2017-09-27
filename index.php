@@ -301,6 +301,7 @@ if (!isset($_SESSION['name'])) {
     [
         'title' => 'Дела в порядке!',
         'projects' => $projects,
+        'project' => $project ?? null,
         'tasks' => $tasks,
         'overlay' => $overlay ?? '',
         'header' => $header,

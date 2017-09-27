@@ -4,9 +4,9 @@
     </a>
 
     <div class="main-header__side">
-        <? if (!isset($_SESSION['name'])): ?>
+        <?php if (!isset($_SESSION['name'])): ?>
             <a class="main-header__side-item button button--transparent" href="/index.php?login">Войти</a>
-        <? else: ?>
+        <?php else: ?>
             <a class="main-header__side-item button button--plus" href="/index.php?add">Добавить задачу</a>
 
             <div class="main-header__side-item user-menu">
@@ -20,6 +20,6 @@
                     <a href="/logout.php">Выйти</a>
                 </div>
             </div>
-        <? endif; ?>
+        <?php endif; ?>
     </div>
 </header>

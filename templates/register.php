@@ -23,7 +23,7 @@
         <section class="content__side">
           <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
 
-          <a class="button button--transparent content__side-button" href="#">Войти</a>
+          <a class="button button--transparent content__side-button" href="index.php?login">Войти</a>
         </section>
 
         <main class="content__main">
@@ -53,9 +53,9 @@
             </div>
 
             <div class="form__row form__row--controls">
-              <? if ($errors ?? false): ?>
+              <?php if ($errors ?? false): ?>
                 <p class="error-massage">Пожалуйста, исправьте ошибки в форме</p>
-              <? endif; ?>
+              <?php endif; ?>
 
               <input class="button" type="submit" name="register" value="Зарегистрироваться">
             </div>

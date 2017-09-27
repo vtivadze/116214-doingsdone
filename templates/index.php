@@ -39,8 +39,8 @@
 
     <table class="tasks">
       
-        <? foreach($tasks as $t): ?>
-            <? if($t['date_completion'] != '' && $show_complete_tasks != 1) continue;?>
+        <?php foreach($tasks as $t): ?>
+            <?php if($t['date_completion'] != '' && $show_complete_tasks != 1) continue;?>
             <tr class="tasks__item task <?=!is_null($t['date_completion']) ? 'task--completed' : ''; ?> <?= (!is_null($t['date_completion']) && get_days_until_deadline($t['deadline']) <= 1) ? 'task--important' : ''; ?>">
 
                 <td class="task__select">
@@ -53,7 +53,7 @@
 
                 <td class="task__controls">
 
-                    <? if(is_null($t['date_completion'])): ?>
+                    <?php if(is_null($t['date_completion'])): ?>
                         <button class="expand-control" type="button" name="button"><?=htmlspecialchars(trim($t['name']))?></button>
 
                         <ul class="expand-list hidden">
@@ -65,10 +65,10 @@
                                 <a href="#">Удалить</a>
                             </li>
                         </ul>
-                    <? endif; ?>
+                    <?php endif; ?>
 
                 </td>
             </tr>
-        <? endforeach; ?>
+        <?php endforeach; ?>
     </table>
 </main>

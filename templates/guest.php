@@ -62,9 +62,9 @@
 
     <h2 class="modal__heading">Вход на сайт</h2>
 
-    <? if ($registered): ?>
+    <?php if ($registered): ?>
       <p>Теперь вы можете войти, используя свой email и пароль!</p>
-    <? endif; ?>
+    <?php endif; ?>
     
     <form class="form" class="" action="index.php" method="post">
       <div class="form__row">
