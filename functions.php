@@ -65,7 +65,7 @@ function validateName($taskName) {
  * @return boolean True if project exists and otherwise false
  */
 function validateProject($id) {
-    return select_data($GLOBALS['con'], 'SELECT id FROM projects WHERE id = ?', [$id]);
+    return selectData($GLOBALS['con'], 'SELECT id FROM projects WHERE id = ?', [$id]);
 }
 
 /**
