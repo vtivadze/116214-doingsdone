@@ -295,6 +295,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
             ]);
         }
     }
+
+    if (isset($_POST['search_task']) && $_POST['search_task'] == 'Искать') {
+        $task_name = trim($_POST['task_name']);
+        if ($task_name != '') {
+            $task_name = '%'.$task_name.'%';
+            $found_tasks = selectData($con, "SELECT * FROM tasks WHERE name LIKE ?", [$task_name]);
+
+            $content = render('index', 
+            [
+                'show_complete_tasks' => $show_complete_tasks,
+                'tasks' => $found_tasks
+            ]);
+        }
+    }
 }
 
 $header = render('header', []);

@@ -28,9 +28,9 @@ function render($template, $params = []) {
 	if(!is_file($template)) {
         return '';
     }
-	extract($params);
 
 	ob_start();
+    extract($params);
 	include $template;
 	return ob_get_clean();
 }
