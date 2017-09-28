@@ -14,8 +14,8 @@
       <label class="form__label" for="project">Проект <sup>*</sup></label>
       <select class="form__input form__input--select  <?=$errors['project']['class'] ?? '';?>" name="project" id="project">
         <option value=""></option>
-        <?php foreach ($projects as $p): ?>
-          <option value="<?=$p['id'];?>" <?=$p['id']==$project ? 'selected' : '';?>><?=$p['name'];?></option>
+        <?php foreach ($projects as $proj): ?>
+          <option value="<?=$proj['id'];?>" <?=$proj['id']==$project ? 'selected' : '';?>><?=$proj['name'];?></option>
         <?php endforeach; ?>
       </select>
       <span class="form__error"><?=$errors['project']['msg'] ?? '';?></span>

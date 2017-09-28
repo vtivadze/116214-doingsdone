@@ -28,10 +28,10 @@
                             <span class="main-navigation__list-item-count"><?=count($tasks);?></span>
                         </li>
 
-                    <?php foreach ($projects as $p): ?>
-                        <li class="main-navigation__list-item <?=$project == $p['id'] ? 'main-navigation__list-item--active' : ''; ?>">
-                            <a class="main-navigation__list-item-link" href="/index.php?project=<?=$p['id'];?>"><?=htmlspecialchars(trim($p['name']))?></a>
-                            <span class="main-navigation__list-item-count"><?=$p['count'];?></span>
+                    <?php foreach ($projects as $proj): ?>
+                        <li class="main-navigation__list-item <?=$project == $proj['id'] ? 'main-navigation__list-item--active' : ''; ?>">
+                            <a class="main-navigation__list-item-link" href="/index.php?project=<?=$proj['id'];?>"><?=htmlspecialchars(trim($proj['name']))?></a>
+                            <span class="main-navigation__list-item-count"><?=$proj['count'];?></span>
                         </li>
                     <?php endforeach; ?>
                     </ul>

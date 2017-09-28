@@ -20,14 +20,14 @@ $sql = 'SELECT
 $not_done = select_data($con, $sql, []);
 
 $mails = [];
-foreach($not_done as $nd) {
-	$uid = $nd['id'];
+foreach($not_done as $item) {
+	$uid = $item['id'];
 	if (!array_key_exists($uid, $mails)) {
-		$mails[$uid] = $nd;
-		$mails[$uid]['body'] = sprintf('Уважаемый, %s. У вас запланирована задача %s на %s', $nd['uname'], $nd['name'], $nd['deadline']);
+		$mails[$uid] = $item;
+		$mails[$uid]['body'] = sprintf('Уважаемый, %s. У вас запланирована задача %s на %s', $item['uname'], $item['name'], $item['deadline']);
 	}
 	else {
-		$mails[$uid]['body'] .= sprintf(', задача %s на %s', $nd['name'], $nd['deadline']);
+		$mails[$uid]['body'] .= sprintf(', задача %s на %s', $item['name'], $item['deadline']);
 	}
 }
 

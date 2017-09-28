@@ -125,8 +125,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
             }
 
             if (array_key_exists($key, $rules)) {
-                if (!call_user_func($rules[$key], $value))
+                if (!call_user_func($rules[$key], $value)) {
                     formErrors($errors, $key, 'Заполните поле корректно!');
+                }
             }
         }
 
@@ -182,8 +183,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
             }
 
             if (array_key_exists($key, $rules)) {
-                if (!call_user_func($rules[$key], $value))
+                if (!call_user_func($rules[$key], $value)) {
                     formErrors($errors, $key, 'Заполните поле корректно!');
+                }
             }
         }
 
@@ -231,8 +233,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
             }
 
             if (array_key_exists($key, $rules)) {
-                if (!call_user_func($rules[$key], $value))
+                if (!call_user_func($rules[$key], $value)) {
                     formErrors($errors, $key, 'Заполните поле корректно!');
+                }
             }
         }
 
