@@ -7,7 +7,7 @@
         <?php if (!isset($_SESSION['name'])): ?>
             <a class="main-header__side-item button button--transparent" href="/index.php?login">Войти</a>
         <?php else: ?>
-            <a class="main-header__side-item button button--plus" href="/index.php?add">Добавить задачу</a>
+            <a class="main-header__side-item button button--plus" href="/index.php?add_task">Добавить задачу</a>
 
             <div class="main-header__side-item user-menu">
                 <div class="user-menu__image">

@@ -37,7 +37,7 @@
                     </ul>
                 </nav>
 
-                <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
+                <a class="button button--transparent button--plus content__side-button" href="index.php?add_project">Добавить проект</a>
             </section>
 
             <?=$content;?>
@@ -53,7 +53,7 @@
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
 
-        <a class="main-footer__button button button--plus" href="/index.php?add">Добавить задачу</a>
+        <a class="main-footer__button button button--plus" href="/index.php?add_task">Добавить задачу</a>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>

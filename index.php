@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
     ]);
 
     //add task
-    if (isset($_GET['add'])) {
+    if (isset($_GET['add_task'])) {
         $overlay = 'overlay';
         $content = render('add_task', 
         [
@@ -94,10 +94,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
         ]);
     }
 
+    //add project
+    if (isset($_GET['add_project'])) {
+        $overlay = 'overlay';
+        $content = render('add_project', []);
+    }
+
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
-    if (isset($_POST['add'])) {
+    if (isset($_POST['add_task'])) {
 
         $name = trim($_POST['name']);
         $project = trim($_POST['project']);
@@ -145,11 +151,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
             header("Location: /");
             exit;
 
-            $content = render('index', 
-            [
-                'show_complete_tasks' => $show_complete_tasks,
-                'tasks' => $tasks
-            ]);
         } else {
 
             $overlay = 'overlay';
@@ -188,11 +189,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
 
         if (!count($errors)) {
             
-            $user_dt = selectData($con, 'SELECT name, password FROM users WHERE email = ?', [$email]);
+            $user_dt = selectData($con, 'SELECT id, name, password FROM users WHERE email = ?', [$email]);
             
             if ($user_dt && password_verify($password, $user_dt[0]['password'])) {
                 $_SESSION['email'] = $email;
                 $_SESSION['name'] = $user_dt[0]['name'];
+                $_SESSION['user_id'] = $user_dt[0]['id'];
 
                 header("Location: /");
                 exit;
@@ -252,6 +254,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
 
             $registered = selectData($con, 'SELECT name, password FROM users WHERE email = ?', [$email]);
 
+        }
+    }
+
+    if (isset($_POST['add_project']) && $_POST['add_project'] == 'Добавить') {
+        if (!isset($_SESSION['name'])) {
+            header("Location: logout.php");
+            exit;
+        }
+
+        $user_id = (int)$_SESSION['user_id'];
+        $proj_name = trim($_POST['name']);
+        $required = ['name'];
+
+        $errors = [];
+        foreach ($_POST as $key => $value) {
+            if (in_array($key, $required) && $value == '') {
+                formErrors($errors, $key, 'Заполните это поле!');
+                continue;
+            }
+        }
+
+
+        if (!count($errors)) {
+            $res = insertData($con, 'projects', [
+                'name' => $proj_name,
+                'user_id' => $user_id
+            ]);
+
+            header("Location: /");
+            exit;
+
+        } else {
+
+            $overlay = 'overlay';
+            $content = render('add_project', 
+            [
+                'name' => $name ?? '',
+                'errors' => $errors ?? []
+            ]);
         }
     }
 }
