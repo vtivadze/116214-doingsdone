@@ -103,13 +103,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $con) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
-    if (isset($_POST['add_task'])) {
+    if (isset($_POST['add']) && $_POST['add'] == 'Добавить') {
 
         $name = trim($_POST['name']);
         $project = trim($_POST['project']);
         $date = trim($_POST['date']);
 
-        $required = ['name', 'project', 'date'];
+        $required = ['name', 'project'];
         $rules = 
         [
             'name' => 'validateName',
@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $con) {
             $res = insertData($con, 'tasks', [
                 'name' => $name,
                 'file' => $f_name ?? '',
-                'deadline' => $date ? formDate($date) : null,
+                'deadline' => $date ? formDate($date) : '',
                 'proj_id' => (int)$project
             ]);
 

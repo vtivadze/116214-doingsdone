@@ -43,6 +43,9 @@ function render($template, $params = []) {
  * @return boolean True if format is correct otherwise false
  */
 function validateDate($date) {
+    if ($date == '') {
+        return true;
+    }
     return preg_match('/^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(19|20)\d\d$/', $date);
 }
 
@@ -86,7 +89,7 @@ function validateFile($file) {
 
     if (is_uploaded_file($f_tmp_name) &&
         in_array($f_type, $mime) &&
-        $f_size < 2000000 &&
+        $f_size < 5000000 &&
         !$f_error)
     {
         $result = true;
@@ -151,13 +154,17 @@ function selectData($con, $sql, $params = []) {
  * @return In succes integer of inserted data id and otherwise boolean false
  */
 function insertData($con, $table, $data) {
+    foreach ($data as $key => $value) {
+        if (!$value) {
+            unset($data[$key]);
+        }
+    }
     $keys = array_keys($data);
     $cols = implode(', ', $keys);
     $values = array_values($data);
     $vals = str_repeat('?, ', count($values));
     $vals = substr($vals, 0, -2);
     $sql = "INSERT INTO $table ($cols) VALUES ($vals)";
-    
     $stmt = db_get_prepare_stmt($con, $sql, $values);
 
     if (mysqli_stmt_execute($stmt)) {
